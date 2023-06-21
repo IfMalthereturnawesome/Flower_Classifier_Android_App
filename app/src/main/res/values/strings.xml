@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Flower Types</string>
+    <string name="launch_gallery">Launch Gallery</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="secondary_text">Plant Type\n</string>
+    <string name="title">Flower Name\n</string>
+    <string name="supporting_text">Plant Height: \n</string>
+    <string name="action_1">Save to My Plants\n</string>
+    <string name="content_description_media">Flower type\n</string>
+    <string name="botanical_name">Botanical Name: </string>
+    <string name="plant_type">Plant Type: </string>
+    <string name="plant_height">Plant Height: </string>
+    <string name="description">Description:</string>
+    <string name="describe_image_here">Flower</string>
+    <string name="classified_as">Classified As:</string>
+    <string name="favorite_button">Save to My Plants</string>
+    <string name="launch_camera">Launch Camera</string>
+    <string name="my_plants">My Plants</string>
+    <string name="delete_from_my_plants">Delete Flower</string>
+    <string name="my_snaps">My History</string>
+    <string name="snap_history">Snap History</string>
+    <string name="back_button">Back Button</string>
+    <string name="updateButton">Undo Favorite</string>
+    <string name="makeFavorite">Save</string>
+    <string name="updateFav">Update</string>
+    <string name="launch_maps">Launch maps</string>
+    <string name="flowers_not_yet_saved">Flowers not yet saved</string>
+    <string name="see_all">See All</string>
+    <string name="my_saved_flowers">My saved flowers</string>
+</resources>

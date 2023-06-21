@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primary_color">#F0EDDD</color>
+
+
+    <color name="fab_background_color">#4DB6AC</color>
+    <color name="fab_icon_color">#000</color>
+    <color name="fab_text_color">#000</color>
+    <color name="fab_stroke_color">#226C66</color>
+    <color name="fab_ripple_color">#802A9D8F</color>
+
+    <color name="bottom_navigation_item_color">#EBEFE2</color>
+
+    <color name="bottom_appbar_menu">#F0EDDD</color>
+    <color name="top_status_bar">#F0EDDD</color>
+    #F0EDDD
+    <color name="colorBackgroundPrimary">#EBEFE2</color>
+    <color name="colorBackgroundSecondary">#F5F5F5</color>
+    <color name="colorBackgroundTertiary">#A84848</color>
+
+    <color name="semiTransparentBlack">#4E000000</color>
+    <color name="semiTransparentPri">#7EF0EDDD</color>
+
+
+
+</resources>

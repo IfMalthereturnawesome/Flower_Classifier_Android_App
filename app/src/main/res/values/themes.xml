@@ -1,0 +1,83 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <attr name="backgroundColorPrimary" format="color" />
+    <attr name="backgroundColorSecondary" format="color" />
+    <attr name="backgroundColorTertiary" format="color" />
+    <!-- Base application theme. -->
+    <style name="Base.Theme.FlowerTypes" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+
+
+    </style>
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+
+    <style name="BottomNavigationItemStyle">
+        <item name="android:titleTextColor">@color/bottom_navigation_item_color</item>
+        <item name="android:iconTint">@color/bottom_navigation_item_color</item>
+    </style>
+
+
+    <style name="Theme.FlowerTypes" parent="Base.Theme.FlowerTypes">
+        <!-- Add your theme customization here -->
+
+
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="android:statusBarColor">@color/top_status_bar</item>
+        <item name="android:navigationBarColor">@color/top_status_bar</item>
+
+
+        <item name="backgroundColorPrimary">?attr/backgroundColorPrimary</item>
+        <item name="backgroundColorSecondary">?attr/backgroundColorSecondary</item>
+        <item name="backgroundColorTertiary">?attr/backgroundColorTertiary</item>
+
+        <!-- FAB Styles -->
+        <item name="extendedFloatingActionButtonStyle">
+            @style/Widget.App.ExtendedFloatingActionButton
+        </item>
+        <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton</item>
+    </style>
+
+    <style name="Theme.FlowerTypes.AppBarOverlay" parent="ThemeOverlay.Material3.ActionBar" />
+
+    <style name="Theme.FlowerTypes.PopupOverlay" parent="ThemeOverlay.Material3" />
+
+    <style name="Widget.App.BottomAppBar" parent="Widget.Material3.BottomAppBar">
+        <item name="materialThemeOverlay">@color/bottom_appbar_menu</item>
+    </style>
+
+
+    <style name="Widget.App.ExtendedFloatingActionButton" parent="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.FloatingActionButton</item>
+    </style>
+
+    <style name="Widget.App.FloatingActionButton" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.FloatingActionButton</item>
+    </style>
+
+
+    <style name="ThemeOverlay.App.FloatingActionButton" parent="">
+        <!-- Apply your FAB color attributes here -->
+
+        <item name="colorSecondary">@color/fab_background_color</item>
+        <item name="colorOnSecondary">@color/material_dynamic_tertiary0</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.FloatingActionButton</item>
+
+        <item name="colorContainer">@color/fab_background_color</item>
+        <item name="colorOnContainer">@color/fab_text_color</item>
+        <item name="colorOnPrimaryContainer">@android:color/black</item>
+        <item name="strokeColor">@color/fab_stroke_color</item>
+        <item name="rippleColor">@color/fab_ripple_color</item>
+        <item name="iconTint">@color/fab_icon_color</item>
+    </style>
+
+
+</resources>

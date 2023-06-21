@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_gallery"
+        android:icon="@drawable/photo_gallary"
+        android:iconTint="@color/bottom_navigation_item_color"
+        android:textColor="@color/bottom_navigation_item_color"
+        android:title="@string/launch_gallery"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_camera"
+        android:icon="@drawable/photo_camera"
+        android:iconTint="@color/bottom_navigation_item_color"
+        android:textColor="@color/bottom_navigation_item_color"
+        android:title="@string/launch_camera"
+        app:showAsAction="ifRoom" />
+
+
+
+    <!-- Add more items as needed -->
+
+</menu>

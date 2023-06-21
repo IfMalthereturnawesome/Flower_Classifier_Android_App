@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "298832574739",
+    "project_id": "flower-types",
+    "storage_bucket": "flower-types.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298832574739:android:e12b9dd98537e52e0dc2e6",
+        "android_client_info": {
+          "package_name": "com.malthe.flowertypes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298832574739-f7j7gaaed8kdbr61t9j4082m4540jnnl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWNpdxOFHxQWA4dzXtpDshbbi1RSYSq64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298832574739-f7j7gaaed8kdbr61t9j4082m4540jnnl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

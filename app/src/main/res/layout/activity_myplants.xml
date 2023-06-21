@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF3E0"
+    tools:context=".ui.activity.MyPlantsActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary_color"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="My Plants" />
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+
+        android:layout_marginTop="40dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/my_saved_flowers"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/seeAll"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                app:backgroundTint="@color/semiTransparentPri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/see_all"
+                app:icon="@drawable/flowers"
+                app:iconPadding="8dp"
+                android:textColor="@color/black"
+                app:iconTint="@color/black" />
+        </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myPlantsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
+
+        android:clipToPadding="false"
+        android:paddingBottom="?attr/actionBarSize"
+        android:scrollbars="horizontal"/>
+
+</LinearLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_navigation"
+        style="@style/Widget.App.BottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/bottom_appbar_menu"
+        app:menu="@menu/bottom_app_bar" />
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mySnaps"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/bottom_appbar_menu"
+        android:text="@string/my_snaps"
+        android:textColor="@color/black"
+        app:showAsAction="always" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/action_camera"
+        style="@style/Widget.App.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="TODO"
+        app:backgroundTint="#E6E4BF"
+        app:layout_anchor="@id/bottom_navigation"
+        app:srcCompat="@drawable/photo_camera" />
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
