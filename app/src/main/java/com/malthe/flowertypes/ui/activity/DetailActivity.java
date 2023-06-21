@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
@@ -86,7 +89,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         initializeViews();
         setupBottomAppBar();
         setupRecyclerView();
-
+        setupLogoIcon();
         initializeDependencies();
 
         handleIntentData();
@@ -146,6 +149,36 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     private void setupLearnMoreButton() {
         Button learnMoreButton = findViewById(R.id.learnMoreButton);
         learnMoreButton.setOnClickListener(v -> openMyPlantsActivity());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_logo) {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupLogoIcon() {
+        MaterialToolbar toolbar = findViewById(R.id.topAppBarDetail);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+        });
+
     }
 
 
@@ -320,22 +353,19 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         googleMap = map;
 
         if (currentFlower != null) {
-            // Get the flower's latitude and longitude
+
             double latitude = currentFlower.getLatitude();
             double longitude = currentFlower.getLongitude();
 
-            Log.d("myTag", "Latitude: " + latitude);
-            Log.d("myTag", "Longitude: " + longitude);
 
-            // Create a LatLng object with the flower's location
+
+
             LatLng flowerLocation = new LatLng(latitude, longitude);
 
-            // Add a marker for the flower's location
             googleMap.addMarker(new MarkerOptions().position(flowerLocation));
 
             Log.d("myTag", "Flower location: " + flowerLocation);
 
-            // Move the camera to the flower's location and set an appropriate zoom level
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(flowerLocation, 12f));
         }
     }
