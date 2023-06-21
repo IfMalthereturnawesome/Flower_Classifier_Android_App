@@ -2,6 +2,7 @@ package com.malthe.flowertypes.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.malthe.flowertypes.R;
+import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.repo.FlowerRepository;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
@@ -24,11 +29,13 @@ import java.util.List;
 
 
 public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.FlowerViewHolder> {
+
     private List<Flower> flowers;
     private FlowerRepository flowerRepository;
     private Context context;
     private int layoutId;
     private OnItemClickListener onItemClickListener;
+    private ActivityOrigin activityOrigin;
 
     public FlowerListAdapter(Context context, int layoutId) {
         this.flowers = new ArrayList<>();
@@ -36,6 +43,18 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
         this.context = context;
         this.layoutId = layoutId;
     }
+
+    public FlowerListAdapter(Context context, int layoutId,  ActivityOrigin activityOrigin) {
+        this.flowers = new ArrayList<>();
+        this.flowerRepository = new FlowerRepository();
+        this.context = context;
+        this.layoutId = layoutId;
+        this.activityOrigin = activityOrigin;
+    }
+
+
+
+
 
     public void loadFlowers(FlowerFilter filter) {
         FlowerRepository.OnFlowersFetchedCallback callback = new FlowerRepository.OnFlowersFetchedCallback() {
@@ -80,6 +99,9 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
 
 
 
+
+
+
     private void showError(String errorMessage) {
         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
     }
@@ -91,11 +113,49 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
         return new FlowerViewHolder(view, onItemClickListener);
     }
 
+
+    private int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+
     @Override
     public void onBindViewHolder(@NonNull FlowerViewHolder holder, int position) {
         Flower flower = flowers.get(position);
         holder.bind(flower);
+
+        ConstraintLayout small = holder.itemView.findViewById(R.id.constraintLayout);
+        ImageView smallImage = holder.itemView.findViewById(R.id.flowerImageView);
+
+
+        if (small != null && smallImage != null) {
+            ViewGroup.LayoutParams params = small.getLayoutParams();
+            ViewGroup.LayoutParams params2 = smallImage.getLayoutParams();
+
+            if (layoutId == R.layout.myplants_item_flower) {
+                if (activityOrigin == ActivityOrigin.SEE_ALL_MY_PLANTS) {
+                    // Apply saved flower layout changes
+                    params.width = dpToPx(278);
+                    params2.height = dpToPx(180);
+                } else {
+                    // Apply not-yet-saved flower layout changes
+                    params.width = dpToPx(135);
+                    params2.height = dpToPx(155);
+                }
+            }
+
+            small.setLayoutParams(params);
+            smallImage.setLayoutParams(params2);
+        }
+
+        if (activityOrigin == ActivityOrigin.SEE_ALL_MY_PLANTS) {
+            holder.updateButton.setIcon(ContextCompat.getDrawable(context, R.drawable.heart_minus));
+        }
+
     }
+
+
+
 
     @Override
     public int getItemCount() {
@@ -191,6 +251,8 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
                 flowerImageView.setVisibility(View.GONE);
             }
         }
+
+
 
 
     }

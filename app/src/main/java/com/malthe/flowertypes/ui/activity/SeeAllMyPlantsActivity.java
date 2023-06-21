@@ -1,24 +1,18 @@
 package com.malthe.flowertypes.ui.activity;
 
-import android.location.LocationListener;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.malthe.flowertypes.ui.utils.ImageUtils;
-import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
-
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -26,7 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,14 +28,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.malthe.flowertypes.R;
+import com.malthe.flowertypes.data.enums.ActivityOrigin;
+import com.malthe.flowertypes.data.enums.FlowerFilter;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
+import com.malthe.flowertypes.ui.utils.ImageUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
-import com.malthe.flowertypes.R;
-
-import com.malthe.flowertypes.data.enums.FlowerFilter;
-import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
+import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
 
 
 public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUtils.ImageClassificationListener, FlowerActionHandler.ActionCallback, LocationListener {
@@ -94,6 +90,8 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
         setupFabCamera();
         setupBottomAppBar();
         setupFlowerListAdapter();
+        setupLogoIcon();
+
     }
 
     private void loadInitialData() {
@@ -103,7 +101,7 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        flowerListAdapter = new FlowerListAdapter(this, R.layout.snap_all_item_flowers);
+        flowerListAdapter = new FlowerListAdapter(this, R.layout.snap_all_item_flowers, ActivityOrigin.SEE_ALL_MY_PLANTS);
 
         recyclerView.setAdapter(flowerListAdapter);
     }
@@ -123,6 +121,7 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
         FloatingActionButton fabCamera = findViewById(R.id.action_camera);
         fabCamera.setOnClickListener(view -> imageClassificationHandler.openCamera());
     }
+
 
     private void setupBottomAppBar() {
         BottomAppBar bottomAppBar = findViewById(R.id.bottom_navigation);
@@ -162,6 +161,34 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
             public void onUpdateClick(String documentId) {
                 updateFavoriteStatus(documentId);
             }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        if (item.getItemId() == R.id.action_logo) {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupLogoIcon(){
+        Toolbar toolbar = findViewById(R.id.topAppBarHistory);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
         });
     }
 

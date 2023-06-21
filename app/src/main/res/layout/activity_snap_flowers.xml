@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary_color"
+            app:menu="@menu/menu_main"
             app:title="Snap History" />
 
 
@@ -64,15 +65,19 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/learnMoreButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/bottom_appbar_menu"
         android:text="@string/my_plants"
-        android:textColor="@color/black"
-        app:showAsAction="always" />
+        android:textColor="@color/colorBlue"
+        app:showAsAction="always"
+        app:backgroundTint="@color/transColorBlue"
+        app:icon="@drawable/flowers"
+        app:iconPadding="6dp"
+        app:iconTint="@color/colorBlue"  />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/action_camera"

@@ -25,8 +25,9 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_marginTop="20dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+       >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,44 +35,6 @@
             android:orientation="vertical"
             android:paddingStart="6dp"
             android:paddingEnd="6dp">
-
-            <!-- Flowers not yet saved -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/flowersNotYetSavedTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/flowers_not_yet_saved"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:textColor="#170C4A" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/seeAllNotYetSaved"
-                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/see_all"
-                    android:textColor="#0D47A1"
-                    app:backgroundTint="@color/semiTransparentPri"
-                    app:icon="@drawable/flowers"
-                    app:iconPadding="8dp"
-                    app:iconTint="#0D47A1" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewNotYetSaved"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="15dp"
-                android:clipToPadding="false"
-
-                android:scrollbars="horizontal" />
 
             <!-- My saved flowers -->
             <LinearLayout
@@ -106,10 +69,51 @@
                 android:id="@+id/recyclerViewSaved"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="?attr/actionBarSize"
+                android:layout_marginBottom="15dp"
                 android:clipToPadding="false"
+
+                />
+
+            <!-- Flowers not yet saved -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/flowersNotYetSavedTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/flowers_not_yet_saved"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:textColor="#170C4A" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/seeAllNotYetSaved"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/see_all"
+                    android:textColor="#0D47A1"
+                    app:backgroundTint="@color/semiTransparentPri"
+                    app:icon="@drawable/flowers"
+                    app:iconPadding="8dp"
+                    app:iconTint="#0D47A1" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewNotYetSaved"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="?attr/actionBarSize"
                 android:paddingBottom="?attr/actionBarSize"
-                android:scrollbars="horizontal" />
+                android:clipToPadding="false"
+
+               />
+
+
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -122,6 +126,23 @@
         android:layout_gravity="bottom"
         app:backgroundTint="@color/bottom_appbar_menu"
         app:menu="@menu/bottom_app_bar" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/learnMoreButton"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="16dp"
+
+        android:text="@string/my_plants"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        android:textColor="@color/colorBlue"
+        app:showAsAction="always"
+        app:backgroundTint="@color/transColorBlue"
+        app:icon="@drawable/flowers"
+        app:iconPadding="6dp"
+        app:iconTint="@color/colorBlue" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/action_camera"

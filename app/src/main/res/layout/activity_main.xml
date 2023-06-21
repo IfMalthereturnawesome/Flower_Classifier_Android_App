@@ -5,31 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF3E0"
-    tools:context=".ui.activity.MainActivity"
-    >
+    tools:context=".ui.activity.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        >
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBarHistory"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary_color"
+            app:menu="@menu/menu_main"
             app:title="Snap History" />
-
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-
         android:layout_marginTop="40dp"
+
+        android:orientation="vertical"
         android:paddingStart="6dp"
         android:paddingEnd="6dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -46,19 +43,19 @@
                 android:layout_weight="1"
                 android:text="@string/flowers_not_yet_saved"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:textColor="@color/black" />
+                android:textColor="#170C4A" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/seeAll"
                 style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                app:backgroundTint="@color/semiTransparentPri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/see_all"
+                android:textColor="#0D47A1"
+                app:backgroundTint="@color/semiTransparentPri"
                 app:icon="@drawable/flowers"
                 app:iconPadding="8dp"
-                android:textColor="@color/black"
-                app:iconTint="@color/black" />
+                app:iconTint="#0D47A1" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -69,8 +66,8 @@
 
             android:clipToPadding="false"
             android:paddingBottom="?attr/actionBarSize"
-            android:scrollbars="horizontal"
-          />
+
+            />
     </LinearLayout>
 
 
@@ -98,14 +95,18 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/learnMoreButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/bottom_appbar_menu"
+
         android:text="@string/my_plants"
-        android:textColor="@color/black"
+        android:textColor="@color/colorBlue"
+        app:backgroundTint="@color/transColorBlue"
+        app:icon="@drawable/flowers"
+        app:iconPadding="6dp"
+        app:iconTint="@color/colorBlue"
         app:showAsAction="always" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

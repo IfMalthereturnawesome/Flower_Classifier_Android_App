@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -36,7 +38,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         flowerRepository = new FlowerRepository();
         setupToolbar();
         mapFragment();
+        setupLogoIcon();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        if (item.getItemId() == R.id.action_logo) {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupLogoIcon(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
+        });
     }
 
     private void loadFavoriteFlowers() {
@@ -160,9 +191,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         toolbar.setNavigationOnClickListener(view -> navigateToMyPlantsActivity());
     }
 
-    private void navigateBack() {
-        onBackPressed();
-    }
 
 
 }

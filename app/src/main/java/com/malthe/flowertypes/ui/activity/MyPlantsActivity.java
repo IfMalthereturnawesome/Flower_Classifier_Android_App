@@ -11,6 +11,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -75,6 +77,7 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
         setUpMySnapsButton();
         setupFabCamera();
         setUpSeeAllMyPlants();
+        setupLogoIcon();
     }
 
     private void initializeDependencies() {
@@ -123,6 +126,35 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
                 return true;
             }
             return false;
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        if (item.getItemId() == R.id.action_logo) {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupLogoIcon(){
+        Toolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -183,6 +215,8 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
         startActivity(intent);
         finish();
     }
+
+
 
     private void navigateBack() {
         onBackPressed();

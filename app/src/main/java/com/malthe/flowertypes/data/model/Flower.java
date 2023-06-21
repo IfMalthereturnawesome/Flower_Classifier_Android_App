@@ -43,6 +43,7 @@ public class Flower implements Parcelable {
         this.latitude = latitude;
         this.classificationDate = classificationDate;
 
+
     }
 
     public com.google.firebase.Timestamp getClassificationDate() {
@@ -54,6 +55,8 @@ public class Flower implements Parcelable {
         this.classificationDate = now;
 
     }
+
+
 
     public double getLongitude() {
         return longitude;

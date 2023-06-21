@@ -121,25 +121,28 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/deleteButton"
-                    style="@style/Widget.Material3.Button.TextButton"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="0dp"
-                    android:text="@string/delete_from_my_plants"
-                    android:textColor="@color/black" />
+                    android:contentDescription="@string/delete_from_my_plants"
+                    android:gravity="start"
+                    android:layout_marginEnd="10dp"
+                    app:cornerRadius="0dp"
+                    app:icon="@drawable/delete"
+                    app:iconSize="18dp"
+                    app:iconTint="#0D47A1" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/updateButton"
-                    style="@style/Widget.Material3.Button.TextButton"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="0dp"
-                    android:text="@string/updateFav"
-                    android:textColor="@color/black" />
+                    android:contentDescription="@string/updateButton"
+                    android:gravity="end"
+                    app:cornerRadius="0dp"
+                    app:icon="@drawable/heart_plus"
+                    app:iconSize="18dp"
+                    app:iconTint="#0D47A1"/>
 
             </LinearLayout>
 

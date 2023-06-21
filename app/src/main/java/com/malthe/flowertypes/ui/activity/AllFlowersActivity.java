@@ -11,6 +11,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +31,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.malthe.flowertypes.R;
+import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.repo.FlowerRepository;
@@ -67,6 +71,9 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
     LinearLayoutManager horizontalLayoutNotYetSaved;
 
+    private final ActivityOrigin seeSnapFlowers = ActivityOrigin.SEE_SNAP_FLOWERS;
+    private final ActivityOrigin seeAllMyFlowers = ActivityOrigin.SEE_ALL_MY_PLANTS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +110,9 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         setupFlowerListAdapterNotSaved();
         setupSeeAllSnapFlowers();
         setUpSeeAllMyPlants();
+        setupToolbar();
+        setupLogoIcon();
+
     }
 
     private void loadInitialData() {
@@ -116,8 +126,8 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         recyclerViewSaved.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewNotYetSaved.setLayoutManager(new LinearLayoutManager(this));
 
-        flowerListAdapterSaved = new FlowerListAdapter(this, R.layout.myplants_item_flower);
-        flowerListAdapterNotYetSaved = new FlowerListAdapter(this, R.layout.myplants_item_flower);
+        flowerListAdapterSaved = new FlowerListAdapter(this, R.layout.myplants_item_flower, seeAllMyFlowers);
+        flowerListAdapterNotYetSaved = new FlowerListAdapter(this, R.layout.myplants_item_flower, seeSnapFlowers);
 
         horizontalLayoutSaved = new LinearLayoutManager(AllFlowersActivity.this, LinearLayoutManager.HORIZONTAL, false);
         horizontalLayoutNotYetSaved = new LinearLayoutManager(AllFlowersActivity.this, LinearLayoutManager.HORIZONTAL, false);
@@ -127,6 +137,32 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
         recyclerViewSaved.setAdapter(flowerListAdapterSaved);
         recyclerViewNotYetSaved.setAdapter(flowerListAdapterNotYetSaved);
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        if (item.getItemId() == R.id.action_logo) {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupLogoIcon(){
+        Toolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+
+
     }
 
 
@@ -144,6 +180,12 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         Button seeAllSnapFlowers = findViewById(R.id.seeAllSaved);
         seeAllSnapFlowers.setOnClickListener(v -> navigateToSeeAllMyPlantsActivity());
     }
+
+    private void setupToolbar() {
+        Button learnMoreButton = findViewById(R.id.learnMoreButton);
+        learnMoreButton.setOnClickListener(v -> openMyPlantsActivity());
+    }
+
 
     private void setupBottomAppBar() {
         BottomAppBar bottomAppBar = findViewById(R.id.bottom_navigation);
@@ -214,9 +256,14 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
 
-
     private void navigateToSeeAllMyPlantsActivity() {
         Intent intent = new Intent(AllFlowersActivity.this, SeeAllMyPlantsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void openMyPlantsActivity() {
+        Intent intent = new Intent(AllFlowersActivity.this, MyPlantsActivity.class);
         startActivity(intent);
         finish();
     }
@@ -280,21 +327,20 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         }
     }
 
-    private void placeholderHelper(){
+    private void placeholderHelper() {
         TextView savedText = findViewById(R.id.mySavedFlowersTextView);
         TextView notSavedText = findViewById(R.id.flowersNotYetSavedTextView);
         MaterialButton savedButton = findViewById(R.id.seeAllSaved);
         MaterialButton notSavedButton = findViewById(R.id.seeAllNotYetSaved);
 
-        if(size == 0){
+        if (size == 0) {
             notSavedText.setVisibility(View.GONE);
             notSavedButton.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             notSavedText.setVisibility(View.VISIBLE);
             notSavedButton.setVisibility(View.VISIBLE);
         }
-        if(sizeFavoriteFlowers == 0){
+        if (sizeFavoriteFlowers == 0) {
             savedText.setVisibility(View.GONE);
             savedButton.setVisibility(View.GONE);
         } else {

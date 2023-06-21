@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -86,6 +88,7 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
         setupFabCamera();
         setupBottomAppBar();
         setupFlowerListAdapter();
+        setupLogoIcon();
     }
 
     private void loadInitialData() {
@@ -136,6 +139,34 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
                 return true;
             }
             return false;
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        if (item.getItemId() == R.id.action_logo) {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupLogoIcon(){
+        Toolbar toolbar = findViewById(R.id.topAppBarHistory);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
         });
     }
 

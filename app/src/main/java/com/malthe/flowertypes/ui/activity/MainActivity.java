@@ -11,6 +11,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -19,18 +21,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.repo.FlowerRepository;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
+import com.malthe.flowertypes.ui.utils.SnackbarUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
 import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
@@ -65,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
         setupViews();
         loadInitialData();
 
+
     }
 
     private void initializeDependencies() {
@@ -87,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
         setupBottomAppBar();
         setupFlowerListAdapter();
         setupSeeAllSnapFlowers();
+        setupLogoIcon();
     }
 
     private void loadInitialData() {
@@ -104,6 +112,37 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
                 false);
         recyclerView.setLayoutManager(HorizontalLayout);
         recyclerView.setAdapter(flowerListAdapter);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_logo) {
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupLogoIcon() {
+        MaterialToolbar toolbar = findViewById(R.id.topAppBarHistory);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(v -> {
+              Intent intent = new Intent(this, AllFlowersActivity.class);
+                startActivity(intent);
+            });
+
     }
 
     private void setupToolbar() {
@@ -170,10 +209,6 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
         flowerActionHandler.updateFavoriteStatus(documentId, this);
     }
 
-
-    private void navigateBack() {
-        onBackPressed();
-    }
 
     private void openMyPlantsActivity() {
         Intent intent = new Intent(MainActivity.this, MyPlantsActivity.class);
@@ -282,6 +317,7 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
     @Override
     public void onProviderEnabled(String provider) {
         // Called when the user enables the location provider (e.g., GPS)
+
     }
 
     @Override

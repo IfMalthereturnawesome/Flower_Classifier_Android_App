@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary_color"
-            app:navigationIcon="@drawable/ic_arrow_back"
+            app:menu="@menu/menu_main"
             app:title="My Plants" />
 
 
@@ -25,9 +25,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-
         android:layout_marginTop="40dp"
+
+        android:orientation="vertical"
         android:paddingStart="6dp"
         android:paddingEnd="6dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -44,32 +44,30 @@
                 android:layout_weight="1"
                 android:text="@string/my_saved_flowers"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:textColor="@color/black" />
+                android:textColor="#170C4A" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/seeAll"
                 style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                app:backgroundTint="@color/semiTransparentPri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/see_all"
+                android:textColor="#0D47A1"
+                app:backgroundTint="@color/semiTransparentPri"
                 app:icon="@drawable/flowers"
                 app:iconPadding="8dp"
-                android:textColor="@color/black"
-                app:iconTint="@color/black" />
+                app:iconTint="#0D47A1" />
         </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myPlantsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/myPlantsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:clipToPadding="false"
+            android:paddingBottom="?attr/actionBarSize" />
 
-        android:clipToPadding="false"
-        android:paddingBottom="?attr/actionBarSize"
-        android:scrollbars="horizontal"/>
-
-</LinearLayout>
+    </LinearLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_navigation"
@@ -81,18 +79,22 @@
         app:menu="@menu/bottom_app_bar" />
 
 
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/mySnaps"
-        style="@style/Widget.Material3.Button.OutlinedButton"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/bottom_appbar_menu"
+
         android:text="@string/my_snaps"
-        android:textColor="@color/black"
-        app:showAsAction="always" />
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        android:textColor="@color/colorBlue"
+        app:showAsAction="always"
+        app:backgroundTint="@color/transColorBlue"
+        app:icon="@drawable/flowers"
+        app:iconPadding="6dp"
+        app:iconTint="@color/colorBlue"  />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/action_camera"
@@ -103,7 +105,6 @@
         app:backgroundTint="#E6E4BF"
         app:layout_anchor="@id/bottom_navigation"
         app:srcCompat="@drawable/photo_camera" />
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
