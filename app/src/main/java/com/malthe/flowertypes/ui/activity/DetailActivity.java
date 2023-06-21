@@ -33,8 +33,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.malthe.flowertypes.data.model.Flower;
 
+import com.malthe.flowertypes.data.model.Flower;
+// Import Date
+import java.sql.Timestamp;
+import java.util.Date;
 import com.malthe.flowertypes.data.repo.FlowerRepository;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
@@ -46,7 +49,7 @@ import com.malthe.flowertypes.ui.utils.SnackbarUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity implements ImageUtils.ImageClassificationListener, OnMapReadyCallback, LocationListener {
@@ -56,6 +59,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     private TextView descriptionView;
     private ImageView imageView;
     private TextView result;
+    private TextView dateTextView;
     private BottomAppBar bottomAppBar;
 
     private ImageClassifier imageClassifier;
@@ -108,6 +112,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         plantTypeView = findViewById(R.id.plantType);
         plantHeightView = findViewById(R.id.plantHeight);
         descriptionView = findViewById(R.id.description);
+        dateTextView = findViewById(R.id.dateTextView);
     }
 
     private void setupRecyclerView() {
@@ -259,11 +264,12 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     }
 
     private void updateFlowerDetails(Flower flower) {
+        com.google.firebase.Timestamp classificationDate = flower.getClassificationDate();
+        Date date = classificationDate.toDate();
         SimpleDateFormat sdf = new SimpleDateFormat("dd. MMM yyyy", Locale.getDefault());
-        String currentDate = sdf.format(new Date());
-        TextView dateTextView = findViewById(R.id.dateTextView);
-        dateTextView.setText(currentDate);
+        String formattedDate = sdf.format(date);
 
+        dateTextView.setText(formattedDate);
         botanicalNameView.setText(flower.getBotanicalName());
         plantTypeView.setText(flower.getPlantType());
         plantHeightView.setText(flower.getPlantHeight());

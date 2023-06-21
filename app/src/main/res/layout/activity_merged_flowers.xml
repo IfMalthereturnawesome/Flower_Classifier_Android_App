@@ -9,18 +9,20 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_scrollFlags="scroll|enterAlways|snap">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary_color"
+
             app:title="Overview" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="40dp"
@@ -47,26 +49,26 @@
                     android:layout_weight="1"
                     android:text="@string/flowers_not_yet_saved"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:textColor="@color/black" />
+                    android:textColor="#170C4A" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/seeAllNotYetSaved"
                     style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                    app:backgroundTint="@color/semiTransparentPri"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all"
+                    android:textColor="#0D47A1"
+                    app:backgroundTint="@color/semiTransparentPri"
                     app:icon="@drawable/flowers"
                     app:iconPadding="8dp"
-                    android:textColor="@color/black"
-                    app:iconTint="@color/black" />
+                    app:iconTint="#0D47A1" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewNotYetSaved"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="?attr/actionBarSize"
+                android:layout_marginBottom="15dp"
                 android:clipToPadding="false"
 
                 android:scrollbars="horizontal" />
@@ -85,19 +87,19 @@
                     android:layout_weight="1"
                     android:text="@string/my_saved_flowers"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:textColor="@color/black" />
+                    android:textColor="#170C4A" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/seeAllSaved"
                     style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                    app:backgroundTint="@color/semiTransparentPri"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all"
+                    android:textColor="#0D47A1"
+                    app:backgroundTint="@color/semiTransparentPri"
                     app:icon="@drawable/flowers"
                     app:iconPadding="8dp"
-                    android:textColor="@color/black"
-                    app:iconTint="@color/black" />
+                    app:iconTint="#0D47A1" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -110,7 +112,7 @@
                 android:scrollbars="horizontal" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_navigation"

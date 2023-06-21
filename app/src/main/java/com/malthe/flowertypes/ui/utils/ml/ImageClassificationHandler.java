@@ -1,13 +1,8 @@
 package com.malthe.flowertypes.ui.utils.ml;
 
-import static android.app.Activity.RESULT_OK;
-import static com.malthe.flowertypes.ui.utils.ImageUtils.REQUEST_DETAIL;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -18,6 +13,8 @@ import com.malthe.flowertypes.data.repo.FlowerRepository;
 import com.malthe.flowertypes.ui.activity.DetailActivity;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
+
+import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +64,7 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
             Flower flower = new Flower(predictedClass);
             flower.setLatitude(latitude);
             flower.setLongitude(longitude);
-            Log.d("MyTag", "Latitude: " + latitude);
-            Log.d("MyTag", "Longitude: " + longitude);
+            flower.setClassificationDate(Timestamp.now());
 
             flowerRepository.addFlower(flower)
                     .addOnSuccessListener(documentReference -> {

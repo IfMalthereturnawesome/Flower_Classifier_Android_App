@@ -3,6 +3,8 @@ package com.malthe.flowertypes.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.sql.Timestamp;
+
 public class Flower implements Parcelable {
     private String botanicalName;
     private String plantType;
@@ -18,6 +20,8 @@ public class Flower implements Parcelable {
 
     private double latitude;
 
+    private com.google.firebase.Timestamp classificationDate;
+
 
     public Flower() {
 
@@ -28,7 +32,7 @@ public class Flower implements Parcelable {
     }
 
 
-    public Flower(String flowerName, String botanicalName, String plantType, String plantHeight, String description, String imageUrl, double longitude, double latitude) {
+    public Flower(String flowerName, String botanicalName, String plantType, String plantHeight, String description, String imageUrl, double longitude, double latitude, com.google.firebase.Timestamp classificationDate) {
         this.flowerName = flowerName;
         this.botanicalName = botanicalName;
         this.plantType = plantType;
@@ -37,6 +41,17 @@ public class Flower implements Parcelable {
         this.imageUrl = imageUrl;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.classificationDate = classificationDate;
+
+    }
+
+    public com.google.firebase.Timestamp getClassificationDate() {
+        return classificationDate;
+    }
+
+
+    public void setClassificationDate(com.google.firebase.Timestamp now) {
+        this.classificationDate = now;
 
     }
 
@@ -127,6 +142,10 @@ public class Flower implements Parcelable {
         dest.writeString(description);
         dest.writeString(flowerName);
         dest.writeString(imageUrl);
+        dest.writeDouble(longitude);
+        dest.writeDouble(latitude);
+
+
     }
 
     public static final Creator<Flower> CREATOR = new Creator<Flower>() {
@@ -148,6 +167,9 @@ public class Flower implements Parcelable {
         plantHeight = in.readString();
         description = in.readString();
         imageUrl = in.readString();
+        longitude = in.readDouble();
+        latitude = in.readDouble();
+
     }
 
 

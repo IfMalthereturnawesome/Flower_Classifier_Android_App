@@ -94,6 +94,7 @@ public class FlowerRepository {
                         flowerData.put("favorite", false);
                         flowerData.put("longitude", flower.getLongitude());
                         flowerData.put("latitude", flower.getLatitude());
+                        flowerData.put("classificationDate", flower.getClassificationDate());
 
 
                         // Add the plant data and get the newly created document reference
