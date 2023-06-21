@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
@@ -57,14 +58,14 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
     private double latitude;
     private double longitude;
     private int size;
-
     LinearLayoutManager HorizontalLayout;
+    LinearProgressIndicator progressIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        progressIndicator = findViewById(R.id.progress_circular);
         initializeDependencies();
         initializeViews();
         initializeLocationManager();
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
         flowerActionHandler = new FlowerActionHandler();
         flowerRepository = new FlowerRepository();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 
@@ -139,9 +140,9 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
         toolbar.setNavigationOnClickListener(v -> {
-              Intent intent = new Intent(this, AllFlowersActivity.class);
-                startActivity(intent);
-            });
+            Intent intent = new Intent(this, AllFlowersActivity.class);
+            startActivity(intent);
+        });
 
     }
 

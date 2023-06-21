@@ -30,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
@@ -73,12 +75,14 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
     private final ActivityOrigin seeSnapFlowers = ActivityOrigin.SEE_SNAP_FLOWERS;
     private final ActivityOrigin seeAllMyFlowers = ActivityOrigin.SEE_ALL_MY_PLANTS;
+    LinearProgressIndicator progressIndicator;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_merged_flowers);
-
+        progressIndicator = findViewById(R.id.progress_circular);
         initializeDependencies();
         initializeViews();
         initializeLocationManager();
@@ -91,7 +95,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         flowerActionHandler = new FlowerActionHandler();
         flowerRepository = new FlowerRepository();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 
@@ -199,6 +203,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
                 navigateToMapsActivity();
                 return true;
             } else if (id == R.id.action_gallery) {
+
                 imageClassificationHandler.openGallery();
                 return true;
             } else if (id == R.id.action_camera) {

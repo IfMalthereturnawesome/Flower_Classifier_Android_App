@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.repo.FlowerRepository;
@@ -29,6 +30,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private FlowerRepository flowerRepository;
     private GoogleMap googleMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

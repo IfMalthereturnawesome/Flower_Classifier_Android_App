@@ -37,6 +37,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.malthe.flowertypes.data.model.Flower;
 // Import Date
 import java.sql.Timestamp;
@@ -81,11 +82,13 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
 
     private GoogleMap googleMap;
 
+    LinearProgressIndicator progressIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
+        progressIndicator = findViewById(R.id.progress_circular);
         initializeViews();
         setupBottomAppBar();
         setupRecyclerView();
@@ -103,7 +106,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     private void initializeDependencies() {
         flowerRepository = new FlowerRepository();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 

@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
@@ -56,13 +57,13 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
     private double latitude;
     private double longitude;
     private int size;
-
+    LinearProgressIndicator progressIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_snap_flowers);
-
+        progressIndicator = findViewById(R.id.progress_circular);
         initializeDependencies();
         initializeViews();
         initializeLocationManager();
@@ -75,7 +76,7 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
         flowerActionHandler = new FlowerActionHandler();
         flowerRepository = new FlowerRepository();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 

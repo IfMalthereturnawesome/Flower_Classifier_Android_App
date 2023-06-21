@@ -7,6 +7,7 @@
     android:background="#FFF3E0"
     tools:context=".ui.activity.AllFlowersActivity">
 
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,14 +21,24 @@
 
             app:title="Overview" />
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_circular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_gravity="top|center_horizontal"
+            app:indicatorColor="@color/colorBlue"
+            android:visibility="gone" />
+
     </com.google.android.material.appbar.AppBarLayout>
+
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-       >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -108,11 +119,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="?attr/actionBarSize"
-                android:paddingBottom="?attr/actionBarSize"
                 android:clipToPadding="false"
+                android:paddingBottom="?attr/actionBarSize"
 
-               />
-
+                />
 
 
         </LinearLayout>
@@ -130,19 +140,19 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/learnMoreButton"
 
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
-        android:layout_marginBottom="16dp"
 
+        android:layout_marginBottom="16dp"
         android:text="@string/my_plants"
-        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
         android:textColor="@color/colorBlue"
-        app:showAsAction="always"
         app:backgroundTint="@color/transColorBlue"
         app:icon="@drawable/flowers"
         app:iconPadding="6dp"
-        app:iconTint="@color/colorBlue" />
+        app:iconTint="@color/colorBlue"
+        app:showAsAction="always" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/action_camera"
@@ -184,5 +194,6 @@
             android:textColor="@color/black" />
 
     </LinearLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

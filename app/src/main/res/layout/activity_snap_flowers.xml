@@ -20,6 +20,15 @@
             app:menu="@menu/menu_main"
             app:title="Snap History" />
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_circular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_gravity="top|center_horizontal"
+            app:indicatorColor="@color/colorBlue"
+            android:visibility="gone" />
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
