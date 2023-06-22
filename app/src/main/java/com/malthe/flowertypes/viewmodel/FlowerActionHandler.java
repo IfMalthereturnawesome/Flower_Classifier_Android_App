@@ -26,7 +26,9 @@ public class FlowerActionHandler {
     public void updateFavoriteStatus(String documentId, ActionCallback callback) {
         flowerService.updateFavoriteStatus(documentId)
                 .addOnSuccessListener(aVoid -> {
+
                     callback.onActionSuccess("Flower updated", documentId);
+
                 })
                 .addOnFailureListener(e -> {
                     callback.onActionFailure("Error updating flower");

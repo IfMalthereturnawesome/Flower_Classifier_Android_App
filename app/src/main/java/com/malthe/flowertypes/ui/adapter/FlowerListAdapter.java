@@ -56,17 +56,19 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
 
     public void loadFlowers(FlowerFilter filter) {
         FlowerService.OnFlowersFetchedCallback callback = new FlowerService.OnFlowersFetchedCallback() {
-            @SuppressLint("NotifyDataSetChanged")
+
             @Override
             public void onFlowersFetched(List<Flower> fetchedFlowers) {
+                int previousSize = flowers.size();
                 flowers.clear();
                 flowers.addAll(fetchedFlowers);
-                notifyDataSetChanged();
+                notifyItemRangeRemoved(0, previousSize);
+                notifyItemRangeInserted(0, flowers.size());
             }
 
             @Override
             public void onError(Exception e) {
-                showError("Error loading flowers: " + e.getMessage());
+
             }
         };
 
@@ -78,11 +80,7 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
     }
 
 
-    private void showError(String errorMessage) {
-        Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
-        toast.show();
-    }
+
 
     @NonNull
     @Override
