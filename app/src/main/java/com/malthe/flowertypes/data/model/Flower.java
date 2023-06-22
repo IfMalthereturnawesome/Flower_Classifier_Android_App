@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.sql.Timestamp;
 
-public class Flower implements Parcelable {
+public class Flower  {
     private String botanicalName;
     private String plantType;
     private String plantHeight;
@@ -22,6 +22,10 @@ public class Flower implements Parcelable {
 
     private com.google.firebase.Timestamp classificationDate;
 
+    private boolean isFavorite;
+
+    private String userId;
+
 
     public Flower() {
 
@@ -32,7 +36,7 @@ public class Flower implements Parcelable {
     }
 
 
-    public Flower(String flowerName, String botanicalName, String plantType, String plantHeight, String description, String imageUrl, double longitude, double latitude, com.google.firebase.Timestamp classificationDate) {
+    public Flower(String flowerName, String botanicalName, String plantType, String plantHeight, String description, String imageUrl, double longitude, double latitude, com.google.firebase.Timestamp classificationDate, boolean isFavorite, String userId) {
         this.flowerName = flowerName;
         this.botanicalName = botanicalName;
         this.plantType = plantType;
@@ -42,8 +46,26 @@ public class Flower implements Parcelable {
         this.longitude = longitude;
         this.latitude = latitude;
         this.classificationDate = classificationDate;
+        this.isFavorite = isFavorite;
+        this.userId = userId;
 
 
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public com.google.firebase.Timestamp getClassificationDate() {
@@ -132,48 +154,7 @@ public class Flower implements Parcelable {
     }
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(botanicalName);
-        dest.writeString(plantType);
-        dest.writeString(plantHeight);
-        dest.writeString(description);
-        dest.writeString(flowerName);
-        dest.writeString(imageUrl);
-        dest.writeDouble(longitude);
-        dest.writeDouble(latitude);
-
-
-    }
-
-    public static final Creator<Flower> CREATOR = new Creator<Flower>() {
-        @Override
-        public Flower createFromParcel(Parcel in) {
-            return new Flower(in);
-        }
-
-        @Override
-        public Flower[] newArray(int size) {
-            return new Flower[size];
-        }
-    };
-
-    protected Flower(Parcel in) {
-        flowerName = in.readString();
-        botanicalName = in.readString();
-        plantType = in.readString();
-        plantHeight = in.readString();
-        description = in.readString();
-        imageUrl = in.readString();
-        longitude = in.readDouble();
-        latitude = in.readDouble();
-
-    }
 
 
 }
