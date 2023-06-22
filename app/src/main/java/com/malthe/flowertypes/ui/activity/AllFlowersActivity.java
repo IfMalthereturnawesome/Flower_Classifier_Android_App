@@ -50,6 +50,7 @@ import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
+import com.malthe.flowertypes.ui.utils.SnackbarUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
 import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
@@ -163,7 +164,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
                 // User is signed in, call onActionSuccess
-                onActionSuccess("Successfully signed in");
+                onActionSuccess("Successfully signed in", null);
                 loadInitialData();
             } else {
                 // User is null, sign-in failed, call onActionFailure
@@ -393,7 +394,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
     private void getSizeOfFlowers() {
-        flowerService.countNoneFavoriteFlowers(new FlowerService.OnCountCallback() {
+        flowerActionHandler.countNoneFavoriteFlowers(new FlowerActionHandler.OnFlowerCountCallback() {
             @Override
             public void onCountReceived(int count) {
                 size = count;
@@ -408,7 +409,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
     private void getSizeOfFavoriteFlowers() {
-        flowerService.countFavoriteFlowers(new FlowerService.OnCountCallback() {
+        flowerActionHandler.countFavoriteFlowers(new FlowerActionHandler.OnFlowerCountCallback() {
             @Override
             public void onCountReceived(int count) {
                 sizeFavoriteFlowers = count;
@@ -520,16 +521,51 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
 
-    @Override
-    public void onActionSuccess(String message) {
 
+    private void showUndoActionToast(String message, LinearLayout snackbarLayout) {
         Toast toast = Toast.makeText(AllFlowersActivity.this, message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
         toast.show();
+    }
+
+
+    private void undoAction(String documentId) {
+        LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
+        flowerService.updateFavoriteStatus(documentId)
+                .addOnSuccessListener(aVoid -> {
+                    showUndoActionToast("Flower marked as not favorite", snackbarLayout);
+                    flowerListAdapterNotYetSaved.loadFlowers(notMyPlants);
+                    flowerListAdapterSaved.loadFlowers(myPlants);
+                    getSizeOfFlowers();
+                    getSizeOfFavoriteFlowers();
+                })
+                .addOnFailureListener(e -> {
+                    showUndoActionToast("Error marking plant as not favorite", snackbarLayout);
+                });
+    }
+
+    @Override
+    public void onActionSuccess(String message, String documentId) {
+
+        if (message.contains("Flower deleted")){
+            Toast toast = Toast.makeText(AllFlowersActivity.this, message, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
+            toast.show();
+        } else {
+            LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
+            SnackbarUtils.createSnackbar(
+                    snackbarLayout,
+                    message,
+                    "Undo",
+                    v -> undoAction(documentId)
+            ).setAnchorView(R.id.action_camera).show();
+        }
         flowerListAdapterNotYetSaved.loadFlowers(notMyPlants);
         flowerListAdapterSaved.loadFlowers(myPlants);
         getSizeOfFlowers();
         getSizeOfFavoriteFlowers();
+
+
     }
 
     @Override

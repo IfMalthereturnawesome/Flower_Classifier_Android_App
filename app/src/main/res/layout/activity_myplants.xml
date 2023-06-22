@@ -78,6 +78,18 @@
 
     </LinearLayout>
 
+    <!-- Snackbar Placement -->
+    <LinearLayout
+        android:id="@+id/snackbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical">
+
+        <!-- Snackbar will be added programmatically here -->
+
+    </LinearLayout>
+
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_navigation"
         style="@style/Widget.App.BottomAppBar"
@@ -114,6 +126,38 @@
         app:backgroundTint="#E6E4BF"
         app:layout_anchor="@id/bottom_navigation"
         app:srcCompat="@drawable/photo_camera" />
+
+
+    <LinearLayout
+        android:id="@+id/placeholderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/photo_camera"
+            android:contentDescription="Placeholder Image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take a picture of a flower"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="to see the results"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

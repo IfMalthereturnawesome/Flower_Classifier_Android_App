@@ -319,6 +319,21 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
                 .into(imageView);
     }
 
+    private void displayClassificationResult(String predictedClass, String imageUriString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd. MMM yyyy", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+        TextView dateTextView = findViewById(R.id.dateTextView);
+        dateTextView.setText(currentDate);
+        currentFlower = new Flower(predictedClass);
+
+        Uri imageUri = Uri.parse(imageUriString);
+        Glide.with(this)
+                .load(imageUri)
+                .into(imageView);
+
+        result.setText(predictedClass);
+    }
+
     private void fetchFlowerDetails(String flowerDocumentId) {
         flowerService.getFlower(flowerDocumentId)
                 .addOnSuccessListener(documentSnapshot -> {
@@ -338,20 +353,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
                 });
     }
 
-    private void displayClassificationResult(String predictedClass, String imageUriString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd. MMM yyyy", Locale.getDefault());
-        String currentDate = sdf.format(new Date());
-        TextView dateTextView = findViewById(R.id.dateTextView);
-        dateTextView.setText(currentDate);
-        currentFlower = new Flower(predictedClass);
 
-        Uri imageUri = Uri.parse(imageUriString);
-        Glide.with(this)
-                .load(imageUri)
-                .into(imageView);
-
-        result.setText(predictedClass);
-    }
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -363,13 +365,9 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
             double longitude = currentFlower.getLongitude();
 
 
-
-
             LatLng flowerLocation = new LatLng(latitude, longitude);
 
             googleMap.addMarker(new MarkerOptions().position(flowerLocation));
-
-            Log.d("myTag", "Flower location: " + flowerLocation);
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(flowerLocation, 12f));
         }

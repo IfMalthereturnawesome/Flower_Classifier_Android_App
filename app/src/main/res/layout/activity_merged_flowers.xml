@@ -128,6 +128,18 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Snackbar Placement -->
+    <LinearLayout
+        android:id="@+id/snackbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical">
+
+        <!-- Snackbar will be added programmatically here -->
+
+    </LinearLayout>
+
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_navigation"
         style="@style/Widget.App.BottomAppBar"

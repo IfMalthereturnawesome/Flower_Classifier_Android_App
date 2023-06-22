@@ -49,26 +49,40 @@ public class FlowerService {
 
     public void countNoneFavoriteFlowers(OnCountCallback callback) {
         CollectionReference myPlantsCollection = FirebaseFirestore.getInstance().collection("MyPlants");
-
-        Query query = myPlantsCollection.whereEqualTo("favorite", false);
+        FirebaseUser currentUser = getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+        Query query = myPlantsCollection
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("favorite", false);
         query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     int count = queryDocumentSnapshots.size();
                     callback.onCountReceived(count);
                 })
                 .addOnFailureListener(callback::onError);
+    } else {
+            callback.onError(new Exception("User not logged in"));
+        }
     }
 
     public void countFavoriteFlowers(OnCountCallback callback) {
         CollectionReference myPlantsCollection = FirebaseFirestore.getInstance().collection("MyPlants");
-
-        Query query = myPlantsCollection.whereEqualTo("favorite", true);
+        FirebaseUser currentUser = getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+        Query query = myPlantsCollection
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("favorite", true);
         query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     int count = queryDocumentSnapshots.size();
                     callback.onCountReceived(count);
                 })
                 .addOnFailureListener(callback::onError);
+    } else {
+            callback.onError(new Exception("User not logged in"));
+        }
     }
 
     public Task<DocumentReference> addFlower(Flower flower) {

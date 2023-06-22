@@ -13,7 +13,10 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,11 +27,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
+import com.malthe.flowertypes.ui.utils.SnackbarUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
 import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
@@ -47,14 +54,16 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
     private FlowerService flowerService;
     private ImageClassifier imageClassifier;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-
+    private LinearLayout placeholderLayout;
     LinearLayoutManager HorizontalLayout;
-
+    private int size;
+    LinearProgressIndicator progressIndicator;
+    private final ActivityOrigin seeAllMyFlowers = ActivityOrigin.SEE_ALL_MY_PLANTS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myplants);
-
+        progressIndicator = findViewById(R.id.progress_circular);
         initializeViews();
         setupViews();
 
@@ -68,6 +77,7 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
 
     private void initializeViews() {
         recyclerView = findViewById(R.id.myPlantsRecyclerView);
+        placeholderLayout = findViewById(R.id.placeholderLayout);
     }
 
     private void setupViews() {
@@ -84,13 +94,13 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
         flowerActionHandler = new FlowerActionHandler();
         flowerService = new FlowerService();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerService, flowerListAdapter);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerService, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        flowerListAdapter = new FlowerListAdapter(this, R.layout.myplants_item_flower);
+        flowerListAdapter = new FlowerListAdapter(this, R.layout.myplants_item_flower,seeAllMyFlowers);
         HorizontalLayout
                 = new LinearLayoutManager(
                 MyPlantsActivity.this,
@@ -105,7 +115,7 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
         toolbar.setNavigationOnClickListener(view -> navigateToMySnapsHistory());
     }
 
-    private void setUpSeeAllMyPlants(){
+    private void setUpSeeAllMyPlants() {
         Button seeAllSnapFlowers = findViewById(R.id.seeAll);
         seeAllSnapFlowers.setOnClickListener(v -> navigateToSeeAllMyPlantsActivity());
     }
@@ -146,7 +156,7 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupLogoIcon(){
+    private void setupLogoIcon() {
         Toolbar toolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(toolbar);
 
@@ -217,8 +227,6 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
     }
 
 
-
-
     private void deletePlant(String documentId) {
         flowerActionHandler.deletePlant(documentId, this);
     }
@@ -279,12 +287,79 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
         // Called when the status of the location provider changes
     }
 
+
+    private void getSizeOfFlowers() {
+        flowerActionHandler.countFavoriteFlowers(new FlowerActionHandler.OnFlowerCountCallback() {
+            @Override
+            public void onCountReceived(int count) {
+                size = count;
+                setupPlaceholder();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // Handle the error
+            }
+        });
+    }
+
+    private void setupPlaceholder() {
+        if (size == 0) {
+            placeholderLayout.setVisibility(View.VISIBLE);
+
+        } else {
+            placeholderLayout.setVisibility(View.GONE);
+
+        }
+    }
+
+
     @Override
-    public void onActionSuccess(String message) {
+    protected void onResume() {
+        super.onResume();
+        flowerListAdapter.loadFlowers(myPlants);
+        getSizeOfFlowers();
+    }
+
+
+    private void showUndoActionToast(String message, LinearLayout snackbarLayout) {
         Toast toast = Toast.makeText(MyPlantsActivity.this, message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
         toast.show();
-        reloadFlowers();
+    }
+
+
+    private void undoAction(String documentId) {
+        LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
+        flowerService.updateFavoriteStatus(documentId)
+                .addOnSuccessListener(aVoid -> {
+                    showUndoActionToast("Flower marked as not favorite", snackbarLayout);
+                    flowerListAdapter.loadFlowers(myPlants);
+
+                })
+                .addOnFailureListener(e -> {
+                    onActionFailure("Error marking plant as not favorite");
+                });
+    }
+
+    @Override
+    public void onActionSuccess(String message, String documentId) {
+        if (message.contains("Flower deleted")) {
+            Toast toast = Toast.makeText(MyPlantsActivity.this, message, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
+            toast.show();
+        } else {
+            LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
+            SnackbarUtils.createSnackbar(
+                    snackbarLayout,
+                    message,
+                    "Undo",
+                    v -> undoAction(documentId)
+            ).setAnchorView(R.id.action_camera).show();
+            reloadFlowers();
+        }
+        flowerListAdapter.loadFlowers(myPlants);
+
     }
 
     @Override

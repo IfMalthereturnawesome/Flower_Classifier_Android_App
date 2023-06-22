@@ -36,6 +36,7 @@ import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
+import com.malthe.flowertypes.ui.utils.SnackbarUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
 import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
@@ -182,7 +183,7 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupLogoIcon(){
+    private void setupLogoIcon() {
         Toolbar toolbar = findViewById(R.id.topAppBarHistory);
         setSupportActionBar(toolbar);
 
@@ -200,7 +201,6 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
     private void updateFavoriteStatus(String documentId) {
         flowerActionHandler.updateFavoriteStatus(documentId, this);
     }
-
 
 
     private void openMyPlantsActivity() {
@@ -227,7 +227,7 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
     }
 
     private void getSizeOfFlowers() {
-        flowerService.countNoneFavoriteFlowers(new FlowerService.OnCountCallback() {
+        flowerActionHandler.countFavoriteFlowers(new FlowerActionHandler.OnFlowerCountCallback() {
             @Override
             public void onCountReceived(int count) {
                 size = count;
@@ -321,15 +321,47 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
         // Called when the status of the location provider changes
     }
 
-
-    @Override
-    public void onActionSuccess(String message) {
-
+    private void showUndoActionToast(String message, LinearLayout snackbarLayout) {
         Toast toast = Toast.makeText(SeeAllMyPlantsActivity.this, message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
         toast.show();
+    }
+
+
+    private void undoAction(String documentId) {
+        LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
+        flowerService.updateFavoriteStatus(documentId)
+                .addOnSuccessListener(aVoid -> {
+                    showUndoActionToast("Flower marked as not favorite", snackbarLayout);
+                    flowerListAdapter.loadFlowers(myPlants);
+                    getSizeOfFlowers();
+
+                })
+                .addOnFailureListener(e -> {
+                    showUndoActionToast("Error marking plant as not favorite", snackbarLayout);
+                });
+    }
+
+    @Override
+    public void onActionSuccess(String message, String documentId) {
+        if (message.contains("Flower deleted")) {
+            Toast toast = Toast.makeText(SeeAllMyPlantsActivity.this, message, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
+            toast.show();
+        } else {
+            LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
+            SnackbarUtils.createSnackbar(
+                    snackbarLayout,
+                    message,
+                    "Undo",
+                    v -> undoAction(documentId)
+            ).setAnchorView(R.id.action_camera).show();
+
+        }
         flowerListAdapter.loadFlowers(myPlants);
         getSizeOfFlowers();
+
+
     }
 
     @Override
