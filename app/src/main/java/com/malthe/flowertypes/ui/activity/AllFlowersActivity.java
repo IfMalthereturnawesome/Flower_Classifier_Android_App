@@ -40,6 +40,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malthe.flowertypes.R;
@@ -55,7 +56,7 @@ import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
 
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Objects;
 
 
 public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.ImageClassificationListener, FlowerActionHandler.ActionCallback, LocationListener {
@@ -91,6 +92,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     private final ActivityOrigin seeSnapFlowers = ActivityOrigin.SEE_SNAP_FLOWERS;
     private final ActivityOrigin seeAllMyFlowers = ActivityOrigin.SEE_ALL_MY_PLANTS;
     LinearProgressIndicator progressIndicator;
+
 
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
@@ -129,7 +131,9 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         } else {
             // User is not signed in, you might want to show sign-in UI here
             List<AuthUI.IdpConfig> providers = Arrays.asList(
-                    new AuthUI.IdpConfig.GoogleBuilder().build());
+                    new AuthUI.IdpConfig.GoogleBuilder().build(),
+                    new AuthUI.IdpConfig.EmailBuilder().build()
+            );
 
             Intent signInIntent = AuthUI.getInstance()
                     .createSignInIntentBuilder()
@@ -143,6 +147,8 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     @Override
     protected void onResume() {
         super.onResume();
+
+
         flowerListAdapterNotYetSaved.loadFlowers(notMyPlants);
         flowerListAdapterSaved.loadFlowers(myPlants);
         getSizeOfFlowers();
@@ -156,22 +162,23 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
             // Successfully signed in
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
-                // User is signed in, update your UI here
-                Toast.makeText(this, "Successfully signed in", Toast.LENGTH_SHORT).show();
+                // User is signed in, call onActionSuccess
+                onActionSuccess("Successfully signed in");
                 loadInitialData();
             } else {
-                // User is null, sign-in failed
-                Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show();
+                // User is null, sign-in failed, call onActionFailure
+                onActionFailure("Sign-in failed");
             }
         } else {
-            // Sign-in failed
+            // Sign-in failed, call onActionFailure
             if (response != null) {
-                Toast.makeText(this, "Sign-in error: " + response.getError(), Toast.LENGTH_SHORT).show();
+                onActionFailure("Sign-in error: " + Objects.requireNonNull(response.getError()).getLocalizedMessage());
             } else {
-                Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show();
+                onActionFailure("Sign-in failed");
             }
         }
     }
+
 
 
     private void initializeDependencies() {
@@ -242,13 +249,17 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
             startActivity(intent);
             return true;
-        } else if (item.getItemId() == R.id.signout){
+        } else if (item.getItemId() == R.id.signout) {
             AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener(task -> {
+
                         // Sign-out completed, handle UI updates or navigate to sign-in screen
+                        Intent intent = new Intent(this, LauncherActivity.class);
+                        startActivity(intent);
                         finish();
                     });
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -455,7 +466,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
                 ImageUtils.handlePermissionsResult(this, requestCode, permissions, grantResults, () -> ImageUtils.openCamera(AllFlowersActivity.this));
             } else {
                 // Permissions denied, handle accordingly
-                Toast.makeText(this, "Location permission denied.", Toast.LENGTH_SHORT).show();
+                onActionFailure("Location permission denied");
             }
         }
 

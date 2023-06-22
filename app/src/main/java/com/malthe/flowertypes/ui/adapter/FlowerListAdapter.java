@@ -3,6 +3,7 @@ package com.malthe.flowertypes.ui.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
+import com.malthe.flowertypes.ui.activity.AllFlowersActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +66,7 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
 
             @Override
             public void onError(Exception e) {
-                showError("Error fetching flowers: " + e.getMessage());
+                showError("Error loading flowers: " + e.getMessage());
             }
         };
 
@@ -78,8 +80,9 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
 
 
     private void showError(String errorMessage) {
-        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-    }
+        Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
+        toast.show();    }
 
     @NonNull
     @Override
