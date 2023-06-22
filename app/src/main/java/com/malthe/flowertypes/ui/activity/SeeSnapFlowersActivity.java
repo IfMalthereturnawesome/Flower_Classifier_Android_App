@@ -110,7 +110,7 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
         Toolbar toolbar = findViewById(R.id.topAppBarHistory);
         toolbar.setTitle(R.string.snap_history);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(view -> navigateToMainActivity());
+        toolbar.setNavigationOnClickListener(view -> navigateToSnapPlantsActivity());
 
         Button learnMoreButton = findViewById(R.id.learnMoreButton);
         learnMoreButton.setOnClickListener(v -> openMyPlantsActivity());
@@ -210,8 +210,8 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
         finish();
     }
 
-    private void navigateToMainActivity() {
-        Intent intent = new Intent(SeeSnapFlowersActivity.this, MainActivity.class);
+    private void navigateToSnapPlantsActivity() {
+        Intent intent = new Intent(SeeSnapFlowersActivity.this, SnapPlantsActivity.class);
         startActivity(intent);
         finish();
     }

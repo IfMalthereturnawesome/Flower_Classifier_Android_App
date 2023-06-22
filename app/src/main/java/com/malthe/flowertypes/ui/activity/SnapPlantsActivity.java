@@ -21,7 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,20 +29,18 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.snackbar.Snackbar;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.repo.FlowerRepository;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
-import com.malthe.flowertypes.ui.utils.SnackbarUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
 import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
 
 
-public class MainActivity extends AppCompatActivity implements ImageUtils.ImageClassificationListener, FlowerActionHandler.ActionCallback, LocationListener {
+public class SnapPlantsActivity extends AppCompatActivity implements ImageUtils.ImageClassificationListener, FlowerActionHandler.ActionCallback, LocationListener {
 
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private RecyclerView recyclerView;
@@ -108,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
         flowerListAdapter = new FlowerListAdapter(this, R.layout.myplants_item_flower);
         HorizontalLayout
                 = new LinearLayoutManager(
-                MainActivity.this,
+                SnapPlantsActivity.this,
                 LinearLayoutManager.HORIZONTAL,
                 false);
         recyclerView.setLayoutManager(HorizontalLayout);
@@ -212,25 +209,25 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
 
 
     private void openMyPlantsActivity() {
-        Intent intent = new Intent(MainActivity.this, MyPlantsActivity.class);
+        Intent intent = new Intent(SnapPlantsActivity.this, MyPlantsActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void navigateToSeeSnapFlowersActivity() {
-        Intent intent = new Intent(MainActivity.this, SeeSnapFlowersActivity.class);
+        Intent intent = new Intent(SnapPlantsActivity.this, SeeSnapFlowersActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void navigateToDetailActivity(Flower flower) {
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        Intent intent = new Intent(SnapPlantsActivity.this, DetailActivity.class);
         intent.putExtra("documentId", flower.getDocumentId());
         startActivity(intent);
     }
 
     private void navigateToMapsActivity() {
-        Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+        Intent intent = new Intent(SnapPlantsActivity.this, MapsActivity.class);
         startActivity(intent);
     }
 
@@ -266,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permissions granted, initialize location manager
                 initializeLocationManager();
-                ImageUtils.handlePermissionsResult(this, requestCode, permissions, grantResults, () -> ImageUtils.openCamera(MainActivity.this));
+                ImageUtils.handlePermissionsResult(this, requestCode, permissions, grantResults, () -> ImageUtils.openCamera(SnapPlantsActivity.this));
             } else {
                 // Permissions denied, handle accordingly
                 Toast.makeText(this, "Location permission denied.", Toast.LENGTH_SHORT).show();
@@ -335,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
     @Override
     public void onActionSuccess(String message) {
 
-        Toast toast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(SnapPlantsActivity.this, message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
         toast.show();
         flowerListAdapter.loadFlowers(notMyPlants);
@@ -344,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements ImageUtils.ImageC
 
     @Override
     public void onActionFailure(String error) {
-        Toast toast = Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(SnapPlantsActivity.this, error, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
         toast.show();
     }

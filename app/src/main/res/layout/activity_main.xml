@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF3E0"
-    tools:context=".ui.activity.MainActivity">
+    tools:context=".ui.activity.SnapPlantsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

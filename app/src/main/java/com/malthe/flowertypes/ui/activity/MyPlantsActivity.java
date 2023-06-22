@@ -205,7 +205,7 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
     }
 
     private void navigateToMySnapsHistory() {
-        Intent intent = new Intent(MyPlantsActivity.this, MainActivity.class);
+        Intent intent = new Intent(MyPlantsActivity.this, SnapPlantsActivity.class);
         startActivity(intent);
         finish();
     }

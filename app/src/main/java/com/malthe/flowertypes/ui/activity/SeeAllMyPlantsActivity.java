@@ -115,7 +115,7 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
 
         Button learnMoreButton = findViewById(R.id.learnMoreButton);
         learnMoreButton.setText(R.string.my_snaps);
-        learnMoreButton.setOnClickListener(v -> navigateToMainActivity());
+        learnMoreButton.setOnClickListener(v -> navigateToSnapPlantsActivity());
     }
 
     private void setupFabCamera() {
@@ -212,8 +212,8 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
         finish();
     }
 
-    private void navigateToMainActivity() {
-        Intent intent = new Intent(SeeAllMyPlantsActivity.this, MainActivity.class);
+    private void navigateToSnapPlantsActivity() {
+        Intent intent = new Intent(SeeAllMyPlantsActivity.this, SnapPlantsActivity.class);
         startActivity(intent);
         finish();
     }

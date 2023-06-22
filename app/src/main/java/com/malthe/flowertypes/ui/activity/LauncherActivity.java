@@ -17,10 +17,10 @@ public class LauncherActivity extends AppCompatActivity {
         // Add any additional setup or logic for your launcher start screen
 
         // Start the main activity after a delay or completion of necessary tasks
-        navigateToMainActivity();
+        navigateToSnapPlantsActivity();
     }
 
-    private void navigateToMainActivity() {
+    private void navigateToSnapPlantsActivity() {
         // Example: Start the main activity after a delay of 2 seconds
         Thread timerThread = new Thread() {
             public void run() {
