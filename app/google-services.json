@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "298832574739-f7j7gaaed8kdbr61t9j4082m4540jnnl.apps.googleusercontent.com",
+          "client_id": "298832574739-47gvuaa8fkfurcmll21s9grovsthgnpv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.malthe.flowertypes",
+            "certificate_hash": "14f675af6d7a883c3514b2ef43bc58eee4e87df6"
+          }
+        },
+        {
+          "client_id": "298832574739-pv2e14t5bn6i2m8bmlhf6ur2gq2lb7fp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "298832574739-f7j7gaaed8kdbr61t9j4082m4540jnnl.apps.googleusercontent.com",
+              "client_id": "298832574739-pv2e14t5bn6i2m8bmlhf6ur2gq2lb7fp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

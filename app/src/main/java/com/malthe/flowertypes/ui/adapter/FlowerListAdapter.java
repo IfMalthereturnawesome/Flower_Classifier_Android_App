@@ -79,27 +79,6 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
         }
     }
 
-    public void loadAllFlowers() {
-        FlowerRepository.OnFlowersFetchedCallback callback = new FlowerRepository.OnFlowersFetchedCallback() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onFlowersFetched(List<Flower> fetchedFlowers) {
-                flowers.clear();
-                flowers.addAll(fetchedFlowers);
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                showError("Error fetching flowers: " + e.getMessage());
-            }
-        };
-        flowerRepository.getAllFlowers(callback);
-    }
-
-
-
-
 
 
     private void showError(String errorMessage) {

@@ -3,6 +3,9 @@ package com.malthe.flowertypes.data.repo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,21 +40,12 @@ public class FlowerRepository {
 
     public interface OnCountCallback {
         void onCountReceived(int count);
+
         void onError(Exception e);
     }
 
-
-    public void fetchFlowerDetails(String flowerName, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
-        DocumentReference documentRef = db.collection("flowers").document(flowerName);
-        documentRef.get().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
-    }
-
-    public Task<Void> updatePlant(String documentId, String flowerDocumentId) {
-        DocumentReference plantRef = myPlantsCollection.document(documentId);
-        DocumentReference flowerRef = db.collection("flowers").document(flowerDocumentId);
-
-        // Update the "flower" field with the new flower reference
-        return plantRef.update(FIELD_FLOWER, flowerRef);
+    private FirebaseUser getCurrentUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public void countNoneFavoriteFlowers(OnCountCallback callback) {
@@ -79,47 +73,56 @@ public class FlowerRepository {
     }
 
     public Task<DocumentReference> addFlower(Flower flower) {
-        DocumentReference flowerRef = db.collection("flowers").document(flower.getFlowerName());
+        FirebaseUser currentUser = getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
 
-        // Fetch the flower data first
-        return flowerRef.get().continueWithTask(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    // Get the data of the document
-                    Map<String, Object> flowerData = document.getData();
-                    if (flowerData != null) {
-                        // Add the flowerName field
-                        flowerData.put("flowerName", flower.getFlowerName());
-                        flowerData.put("favorite", false);
-                        flowerData.put("longitude", flower.getLongitude());
-                        flowerData.put("latitude", flower.getLatitude());
-                        flowerData.put("classificationDate", flower.getClassificationDate());
+            DocumentReference flowerRef = db.collection("flowers").document(flower.getFlowerName());
 
+            // Fetch the flower data first
+            return flowerRef.get().continueWithTask(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Get the data of the document
+                        Map<String, Object> flowerData = document.getData();
+                        if (flowerData != null) {
+                            // Add the userId field
+                            flowerData.put("userId", userId);
+                            // Add other fields
+                            flowerData.put("flowerName", flower.getFlowerName());
+                            flowerData.put("favorite", false);
+                            flowerData.put("longitude", flower.getLongitude());
+                            flowerData.put("latitude", flower.getLatitude());
+                            flowerData.put("classificationDate", flower.getClassificationDate());
 
-                        // Add the plant data and get the newly created document reference
-                        return myPlantsCollection.add(flowerData)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        // Set the Firestore document ID to the flower
-                                        flower.setDocumentId(documentReference.getId());
+                            return myPlantsCollection.add(flowerData)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            // Set the Firestore document ID to the flower
+                                            flower.setDocumentId(documentReference.getId());
 
-                                        // Update the document in Firestore with the documentId
-                                        documentReference.update("documentId", documentReference.getId());
-                                    }
-                                });
+                                            // Update the document in Firestore with the documentId
+                                            documentReference.update("documentId", documentReference.getId());
+                                        }
+                                    });
+                        } else {
+                            throw new IllegalArgumentException("No data in document");
+                        }
                     } else {
-                        throw new IllegalArgumentException("No data in document");
+                        throw new IllegalArgumentException("No such document");
                     }
                 } else {
-                    throw new IllegalArgumentException("No such document");
+                    throw Objects.requireNonNull(task.getException());
                 }
-            } else {
-                throw Objects.requireNonNull(task.getException());
-            }
-        });
+            });
+        } else {
+            // User is not signed in, handle the error or show appropriate UI
+            return Tasks.forException(new Exception("User not signed in"));
+        }
     }
+
 
     public Task<DocumentSnapshot> getFlower(String flowerDocumentId) {
         DocumentReference flowerRef = myPlantsCollection.document(flowerDocumentId);
@@ -144,7 +147,6 @@ public class FlowerRepository {
     }
 
 
-
     public Task<Void> updateFlowerToFavorite(String flowerDocumentId) {
         DocumentReference flowerRef = myPlantsCollection.document(flowerDocumentId);
         // Updating the favorite field to true
@@ -158,44 +160,65 @@ public class FlowerRepository {
     }
 
     public void getAllMyPlantsFlowers(OnFlowersFetchedCallback callback) {
-        db.collection("MyPlants")
-                .whereEqualTo("favorite", true)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Flower> flowers = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Flower flower = document.toObject(Flower.class);
-                            flower.setDocumentId(document.getId());
+        FirebaseUser currentUser = getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
 
-                            flowers.add(flower);
+            db.collection("MyPlants")
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("favorite", true)
+                    .orderBy("classificationDate", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            List<Flower> flowers = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Flower flower = document.toObject(Flower.class);
+                                flower.setDocumentId(document.getId());
+
+                                flowers.add(flower);
+                            }
+                            callback.onFlowersFetched(flowers);
+                        } else {
+                            callback.onError(task.getException());
                         }
-                        callback.onFlowersFetched(flowers);
-                    } else {
-                        callback.onError(task.getException());
-                    }
-                });
+                    });
+        } else {
+            // User is not signed in, handle the error or show appropriate UI
+            callback.onError(new Exception("User not signed in"));
+        }
     }
 
     public void getAllNoneMyPlantsFlowers(OnFlowersFetchedCallback callback) {
-        db.collection("MyPlants")
-                .whereEqualTo("favorite", false)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Flower> flowers = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Flower flower = document.toObject(Flower.class);
-                            flower.setDocumentId(document.getId());
+        FirebaseUser currentUser = getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
 
-                            flowers.add(flower);
+            db.collection("MyPlants")
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("favorite", false)
+                    .orderBy("classificationDate", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            List<Flower> flowers = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Flower flower = document.toObject(Flower.class);
+                                flower.setDocumentId(document.getId());
+
+                                flowers.add(flower);
+                            }
+                            callback.onFlowersFetched(flowers);
+                        } else {
+                            callback.onError(task.getException());
                         }
-                        callback.onFlowersFetched(flowers);
-                    } else {
-                        callback.onError(task.getException());
-                    }
-                });
+                    });
+        } else {
+            // User is not signed in, handle the error or show appropriate UI
+            callback.onError(new Exception("User not signed in"));
+        }
     }
+
 
 
     public Task<Void> deletePlant(String documentId) {
@@ -203,25 +226,6 @@ public class FlowerRepository {
 
         // Delete the document from the "MyPlants" collection
         return plantRef.delete();
-    }
-
-    public void getAllFlowers(OnFlowersFetchedCallback callback) {
-        db.collection("MyPlants")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Flower> flowers = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Flower flower = document.toObject(Flower.class);
-                            flower.setDocumentId(document.getId());
-
-                            flowers.add(flower);
-                        }
-                        callback.onFlowersFetched(flowers);
-                    } else {
-                        callback.onError(task.getException());
-                    }
-                });
     }
 
 

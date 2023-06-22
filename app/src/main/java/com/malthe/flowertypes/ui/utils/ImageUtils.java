@@ -119,7 +119,6 @@ public class ImageUtils {
         }
     }
 
-
     public static void handlePermissionsResult(AppCompatActivity activity, int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults, PermissionResultListener listener) {
         if (requestCode == 100) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

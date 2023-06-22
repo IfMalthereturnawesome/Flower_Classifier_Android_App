@@ -103,6 +103,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         mapFragment();
     }
 
+
     private void initializeDependencies() {
         flowerRepository = new FlowerRepository();
         imageClassifier = new ImageClassifier(this);
@@ -165,6 +166,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
 
         if (item.getItemId() == R.id.action_logo) {
             Intent intent = new Intent(this, AllFlowersActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             return true;
         }
@@ -179,6 +181,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
 
         toolbar.setNavigationOnClickListener(v -> {
             Intent intent = new Intent(this, AllFlowersActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         });
 

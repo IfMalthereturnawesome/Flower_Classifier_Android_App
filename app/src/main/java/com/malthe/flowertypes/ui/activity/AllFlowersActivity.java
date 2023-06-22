@@ -3,6 +3,7 @@ package com.malthe.flowertypes.ui.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -10,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,11 +31,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
+import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
@@ -42,6 +54,11 @@ import com.malthe.flowertypes.ui.utils.ImageUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
 import com.malthe.flowertypes.viewmodel.FlowerActionHandler;
+
+import java.util.Arrays;
+import java.util.List;
+
+
 
 public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.ImageClassificationListener, FlowerActionHandler.ActionCallback, LocationListener {
 
@@ -77,11 +94,21 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     private final ActivityOrigin seeAllMyFlowers = ActivityOrigin.SEE_ALL_MY_PLANTS;
     LinearProgressIndicator progressIndicator;
 
+    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+            new FirebaseAuthUIActivityResultContract(),
+            new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
+                @Override
+                public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
+                    onSignInResult(result);
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_merged_flowers);
+
         progressIndicator = findViewById(R.id.progress_circular);
         initializeDependencies();
         initializeViews();
@@ -89,7 +116,66 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         setupViews();
         loadInitialData();
 
+
     }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            // User is signed in, update your UI here
+            loadInitialData();
+        } else {
+            // User is not signed in, you might want to show sign-in UI here
+            List<AuthUI.IdpConfig> providers = Arrays.asList(
+                    new AuthUI.IdpConfig.GoogleBuilder().build());
+
+            Intent signInIntent = AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(providers)
+                    .build();
+
+            signInLauncher.launch(signInIntent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        flowerListAdapterNotYetSaved.loadFlowers(notMyPlants);
+        flowerListAdapterSaved.loadFlowers(myPlants);
+        getSizeOfFlowers();
+        getSizeOfFavoriteFlowers();
+        setupPlaceholder();
+    }
+
+    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
+        IdpResponse response = result.getIdpResponse();
+        if (result.getResultCode() == RESULT_OK) {
+            // Successfully signed in
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                // User is signed in, update your UI here
+                Toast.makeText(this, "Successfully signed in", Toast.LENGTH_SHORT).show();
+                loadInitialData();
+            } else {
+                // User is null, sign-in failed
+                Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // Sign-in failed
+            if (response != null) {
+                Toast.makeText(this, "Sign-in error: " + response.getError(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
     private void initializeDependencies() {
         flowerActionHandler = new FlowerActionHandler();
@@ -147,7 +233,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_signout, menu);
         return true;
     }
 
@@ -156,16 +242,23 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         // Handle presses on the action bar items
         if (item.getItemId() == R.id.action_logo) {
             Intent intent = new Intent(this, AllFlowersActivity.class);
+
             startActivity(intent);
             return true;
+        } else if (item.getItemId() == R.id.signout){
+            AuthUI.getInstance()
+                    .signOut(this)
+                    .addOnCompleteListener(task -> {
+                        // Sign-out completed, handle UI updates or navigate to sign-in screen
+                        finish();
+                    });
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupLogoIcon(){
+    private void setupLogoIcon() {
         Toolbar toolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(toolbar);
-
 
     }
 
@@ -372,15 +465,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        flowerListAdapterNotYetSaved.loadFlowers(notMyPlants);
-        flowerListAdapterSaved.loadFlowers(myPlants);
-        getSizeOfFlowers();
-        getSizeOfFavoriteFlowers();
-        setupPlaceholder();
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -427,6 +512,8 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // Called when the status of the location provider changes
     }
+
+
 
     @Override
     public void onActionSuccess(String message) {
