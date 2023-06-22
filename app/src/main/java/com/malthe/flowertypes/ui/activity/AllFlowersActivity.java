@@ -11,7 +11,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,14 +40,13 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
 import com.malthe.flowertypes.data.model.Flower;
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
@@ -71,7 +69,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     private RecyclerView recyclerViewSaved;
     private FlowerListAdapter flowerListAdapterNotYetSaved;
     private FlowerListAdapter flowerListAdapterSaved;
-    private FlowerRepository flowerRepository;
+    private FlowerService flowerService;
     private ImageClassifier imageClassifier;
     private LinearLayout placeholderLayout;
     private FlowerActionHandler flowerActionHandler;
@@ -176,12 +174,11 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
 
-
     private void initializeDependencies() {
         flowerActionHandler = new FlowerActionHandler();
-        flowerRepository = new FlowerRepository();
+        flowerService = new FlowerService();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter, progressIndicator);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerService, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 
@@ -385,7 +382,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
     private void getSizeOfFlowers() {
-        flowerRepository.countNoneFavoriteFlowers(new FlowerRepository.OnCountCallback() {
+        flowerService.countNoneFavoriteFlowers(new FlowerService.OnCountCallback() {
             @Override
             public void onCountReceived(int count) {
                 size = count;
@@ -400,7 +397,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
     private void getSizeOfFavoriteFlowers() {
-        flowerRepository.countFavoriteFlowers(new FlowerRepository.OnCountCallback() {
+        flowerService.countFavoriteFlowers(new FlowerService.OnCountCallback() {
             @Override
             public void onCountReceived(int count) {
                 sizeFavoriteFlowers = count;
@@ -465,8 +462,6 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -512,7 +507,6 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // Called when the status of the location provider changes
     }
-
 
 
     @Override

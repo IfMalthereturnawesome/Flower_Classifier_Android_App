@@ -33,7 +33,7 @@ import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
 import com.malthe.flowertypes.data.model.Flower;
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
@@ -47,7 +47,7 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private RecyclerView recyclerView;
     private FlowerListAdapter flowerListAdapter;
-    private FlowerRepository flowerRepository;
+    private FlowerService flowerService;
     private ImageClassifier imageClassifier;
     private LinearLayout placeholderLayout;
     private FlowerActionHandler flowerActionHandler;
@@ -74,9 +74,9 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
 
     private void initializeDependencies() {
         flowerActionHandler = new FlowerActionHandler();
-        flowerRepository = new FlowerRepository();
+        flowerService = new FlowerService();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter, progressIndicator);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerService, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 
@@ -202,9 +202,6 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
     }
 
 
-    private void navigateBack() {
-        onBackPressed();
-    }
 
     private void openMyPlantsActivity() {
         Intent intent = new Intent(SeeAllMyPlantsActivity.this, MyPlantsActivity.class);
@@ -230,7 +227,7 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
     }
 
     private void getSizeOfFlowers() {
-        flowerRepository.countNoneFavoriteFlowers(new FlowerRepository.OnCountCallback() {
+        flowerService.countNoneFavoriteFlowers(new FlowerService.OnCountCallback() {
             @Override
             public void onCountReceived(int count) {
                 size = count;
@@ -269,7 +266,6 @@ public class SeeAllMyPlantsActivity extends AppCompatActivity implements ImageUt
         }
 
     }
-
 
     @Override
     protected void onResume() {

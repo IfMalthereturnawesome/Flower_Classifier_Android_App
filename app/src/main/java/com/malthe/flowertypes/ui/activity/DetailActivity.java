@@ -40,9 +40,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.malthe.flowertypes.data.model.Flower;
 // Import Date
-import java.sql.Timestamp;
 import java.util.Date;
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
@@ -72,7 +71,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     private RecyclerView recyclerView;
 
     private Flower currentFlower;
-    private FlowerRepository flowerRepository;
+    private FlowerService flowerService;
     private LocationManager locationManager;
     private double latitude;
     private double longitude;
@@ -105,9 +104,9 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
 
 
     private void initializeDependencies() {
-        flowerRepository = new FlowerRepository();
+        flowerService = new FlowerService();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter, progressIndicator);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerService, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 
@@ -213,7 +212,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         if (currentFlower != null) {
             String flowerDocumentId = currentFlower.getDocumentId();
 
-            flowerRepository.updateFlowerToFavorite(flowerDocumentId)
+            flowerService.updateFlowerToFavorite(flowerDocumentId)
                     .addOnSuccessListener(aVoid -> {
                         LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
                         SnackbarUtils.createSnackbar(
@@ -231,7 +230,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
 
     private void undoAction(String documentId) {
         LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
-        flowerRepository.updateFlowerToNotFavorite(documentId)
+        flowerService.updateFlowerToNotFavorite(documentId)
                 .addOnSuccessListener(aVoid -> {
                     showUndoActionToast("Flower marked as not favorite", snackbarLayout);
                 })
@@ -321,7 +320,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     }
 
     private void fetchFlowerDetails(String flowerDocumentId) {
-        flowerRepository.getFlower(flowerDocumentId)
+        flowerService.getFlower(flowerDocumentId)
                 .addOnSuccessListener(documentSnapshot -> {
                     Flower flower = documentSnapshot.toObject(Flower.class);
                     if (flower != null) {

@@ -27,7 +27,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.R;
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
@@ -44,7 +44,7 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
     private FlowerActionHandler flowerActionHandler;
     private double latitude;
     private double longitude;
-    private FlowerRepository flowerRepository;
+    private FlowerService flowerService;
     private ImageClassifier imageClassifier;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
 
@@ -82,9 +82,9 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
 
     private void initializeDependencies() {
         flowerActionHandler = new FlowerActionHandler();
-        flowerRepository = new FlowerRepository();
+        flowerService = new FlowerService();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerService, flowerListAdapter);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 
@@ -217,10 +217,6 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
     }
 
 
-
-    private void navigateBack() {
-        onBackPressed();
-    }
 
 
     private void deletePlant(String documentId) {

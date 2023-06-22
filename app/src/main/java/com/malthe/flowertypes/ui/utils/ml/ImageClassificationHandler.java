@@ -9,11 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.model.Flower;
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.activity.DetailActivity;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
@@ -31,7 +29,7 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
 
     private ImageClassifier imageClassifier;
 
-    private FlowerRepository flowerRepository;
+    private FlowerService flowerService;
     private FlowerListAdapter flowerListAdapter;
     private ImageUtils.ImageClassificationListener imageClassificationListener;
 
@@ -40,22 +38,22 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
     private LinearProgressIndicator progressIndicator;
 
 
-    public ImageClassificationHandler(AppCompatActivity activity, double latitude, double longitude, ImageClassifier imageClassifier, FlowerRepository flowerRepository, FlowerListAdapter flowerListAdapter, LinearProgressIndicator progressIndicator) {
+    public ImageClassificationHandler(AppCompatActivity activity, double latitude, double longitude, ImageClassifier imageClassifier, FlowerService flowerService, FlowerListAdapter flowerListAdapter, LinearProgressIndicator progressIndicator) {
         this.activity = activity;
         this.latitude = latitude;
         this.longitude = longitude;
         this.imageClassifier = imageClassifier;
-        this.flowerRepository = flowerRepository;
+        this.flowerService = flowerService;
         this.flowerListAdapter = flowerListAdapter;
         this.progressIndicator = progressIndicator;
     }
 
-    public ImageClassificationHandler(AppCompatActivity activity, double latitude, double longitude, ImageClassifier imageClassifier, FlowerRepository flowerRepository, FlowerListAdapter flowerListAdapter) {
+    public ImageClassificationHandler(AppCompatActivity activity, double latitude, double longitude, ImageClassifier imageClassifier, FlowerService flowerService, FlowerListAdapter flowerListAdapter) {
         this.activity = activity;
         this.latitude = latitude;
         this.longitude = longitude;
         this.imageClassifier = imageClassifier;
-        this.flowerRepository = flowerRepository;
+        this.flowerService = flowerService;
         this.flowerListAdapter = flowerListAdapter;
 
     }
@@ -85,7 +83,7 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
             flower.setLongitude(longitude);
             flower.setClassificationDate(Timestamp.now());
 
-            flowerRepository.addFlower(flower)
+            flowerService.addFlower(flower)
                     .addOnSuccessListener(documentReference -> {
                         flower.setDocumentId(documentReference.getId());
 

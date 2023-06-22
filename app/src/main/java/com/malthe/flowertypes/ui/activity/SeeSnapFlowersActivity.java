@@ -32,7 +32,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.malthe.flowertypes.data.model.Flower;
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassifier;
 import com.malthe.flowertypes.R;
@@ -45,7 +45,7 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private RecyclerView recyclerView;
     private FlowerListAdapter flowerListAdapter;
-    private FlowerRepository flowerRepository;
+    private FlowerService flowerService;
     private ImageClassifier imageClassifier;
     private LinearLayout placeholderLayout;
     private FlowerActionHandler flowerActionHandler;
@@ -73,9 +73,9 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
 
     private void initializeDependencies() {
         flowerActionHandler = new FlowerActionHandler();
-        flowerRepository = new FlowerRepository();
+        flowerService = new FlowerService();
         imageClassifier = new ImageClassifier(this);
-        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerRepository, flowerListAdapter, progressIndicator);
+        imageClassificationHandler = new ImageClassificationHandler(this, latitude, longitude, imageClassifier, flowerService, flowerListAdapter, progressIndicator);
         imageClassificationHandler.setImageClassificationListener(this);
     }
 
@@ -200,10 +200,6 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
     }
 
 
-    private void navigateBack() {
-        onBackPressed();
-    }
-
     private void openMyPlantsActivity() {
         Intent intent = new Intent(SeeSnapFlowersActivity.this, MyPlantsActivity.class);
         startActivity(intent);
@@ -228,7 +224,7 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
     }
 
     private void getSizeOfFlowers() {
-        flowerRepository.countNoneFavoriteFlowers(new FlowerRepository.OnCountCallback() {
+        flowerService.countNoneFavoriteFlowers(new FlowerService.OnCountCallback() {
             @Override
             public void onCountReceived(int count) {
                 size = count;

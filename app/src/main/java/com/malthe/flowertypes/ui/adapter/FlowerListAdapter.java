@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -21,7 +20,7 @@ import com.google.android.material.button.MaterialButton;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.enums.ActivityOrigin;
 import com.malthe.flowertypes.data.model.Flower;
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.data.enums.FlowerFilter;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import java.util.List;
 public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.FlowerViewHolder> {
 
     private List<Flower> flowers;
-    private FlowerRepository flowerRepository;
+    private FlowerService flowerService;
     private Context context;
     private int layoutId;
     private OnItemClickListener onItemClickListener;
@@ -39,25 +38,22 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
 
     public FlowerListAdapter(Context context, int layoutId) {
         this.flowers = new ArrayList<>();
-        this.flowerRepository = new FlowerRepository();
+        this.flowerService = new FlowerService();
         this.context = context;
         this.layoutId = layoutId;
     }
 
     public FlowerListAdapter(Context context, int layoutId,  ActivityOrigin activityOrigin) {
         this.flowers = new ArrayList<>();
-        this.flowerRepository = new FlowerRepository();
+        this.flowerService = new FlowerService();
         this.context = context;
         this.layoutId = layoutId;
         this.activityOrigin = activityOrigin;
     }
 
 
-
-
-
     public void loadFlowers(FlowerFilter filter) {
-        FlowerRepository.OnFlowersFetchedCallback callback = new FlowerRepository.OnFlowersFetchedCallback() {
+        FlowerService.OnFlowersFetchedCallback callback = new FlowerService.OnFlowersFetchedCallback() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onFlowersFetched(List<Flower> fetchedFlowers) {
@@ -73,9 +69,9 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
         };
 
         if (filter == FlowerFilter.MY_PLANTS) {
-            flowerRepository.getAllMyPlantsFlowers(callback);
+            flowerService.getAllMyPlantsFlowers(callback);
         } else {
-            flowerRepository.getAllNoneMyPlantsFlowers(callback);
+            flowerService.getAllNoneMyPlantsFlowers(callback);
         }
     }
 

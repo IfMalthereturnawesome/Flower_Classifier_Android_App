@@ -1,16 +1,16 @@
 package com.malthe.flowertypes.viewmodel;
 
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 
 public class FlowerActionHandler {
-    private final FlowerRepository flowerRepository;
+    private final FlowerService flowerService;
 
     public FlowerActionHandler() {
-        flowerRepository = new FlowerRepository();
+        flowerService = new FlowerService();
     }
 
     public void deletePlant(String documentId, ActionCallback callback) {
-        flowerRepository.deletePlant(documentId)
+        flowerService.deletePlant(documentId)
                 .addOnSuccessListener(aVoid -> {
                     callback.onActionSuccess("Flower deleted");
                 })
@@ -20,7 +20,7 @@ public class FlowerActionHandler {
     }
 
     public void updateFavoriteStatus(String documentId, ActionCallback callback) {
-        flowerRepository.updateFavoriteStatus(documentId)
+        flowerService.updateFavoriteStatus(documentId)
                 .addOnSuccessListener(aVoid -> {
                     callback.onActionSuccess("Flower updated");
                 })

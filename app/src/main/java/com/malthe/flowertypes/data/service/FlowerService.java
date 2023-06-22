@@ -1,6 +1,5 @@
-package com.malthe.flowertypes.data.repo;
+package com.malthe.flowertypes.data.service;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -20,14 +19,14 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class FlowerRepository {
+public class FlowerService {
 
     private static final String COLLECTION_MY_PLANTS = "MyPlants";
     private static final String FIELD_FLOWER = "flower";
     private final FirebaseFirestore db;
     private final CollectionReference myPlantsCollection;
 
-    public FlowerRepository() {
+    public FlowerService() {
         db = FirebaseFirestore.getInstance();
         myPlantsCollection = db.collection(COLLECTION_MY_PLANTS);
     }

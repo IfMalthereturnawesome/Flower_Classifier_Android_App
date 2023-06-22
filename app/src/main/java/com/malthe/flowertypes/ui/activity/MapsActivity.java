@@ -1,7 +1,6 @@
 package com.malthe.flowertypes.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,16 +18,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.model.Flower;
-import com.malthe.flowertypes.data.repo.FlowerRepository;
+import com.malthe.flowertypes.data.service.FlowerService;
 
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
 
-    private FlowerRepository flowerRepository;
+    private FlowerService flowerService;
     private GoogleMap googleMap;
 
 
@@ -37,7 +35,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myplants_maps);
 
-        flowerRepository = new FlowerRepository();
+        flowerService = new FlowerService();
         setupToolbar();
         mapFragment();
         setupLogoIcon();
@@ -73,7 +71,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void loadFavoriteFlowers() {
-        flowerRepository.getAllMyPlantsFlowers(new FlowerRepository.OnFlowersFetchedCallback() {
+        flowerService.getAllMyPlantsFlowers(new FlowerService.OnFlowersFetchedCallback() {
             @Override
             public void onFlowersFetched(List<Flower> flowers) {
                 addMarkersOnMap(flowers);
