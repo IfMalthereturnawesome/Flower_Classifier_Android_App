@@ -3,7 +3,6 @@ package com.malthe.flowertypes.ui.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -30,7 +29,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
@@ -38,9 +36,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malthe.flowertypes.R;
@@ -374,6 +370,12 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         startActivity(intent);
 
     }
+
+//        Navigation to an URI Intent URI
+//    private void navigateToWebsite(){
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"));
+//        startActivity(intent);
+//    }
 
     private void openMyPlantsActivity() {
         Intent intent = new Intent(this, MyPlantsActivity.class);
