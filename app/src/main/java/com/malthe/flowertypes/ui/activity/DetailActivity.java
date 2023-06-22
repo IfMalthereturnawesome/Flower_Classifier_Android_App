@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -93,6 +94,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         setupBottomAppBar();
         setupRecyclerView();
         setupLogoIcon();
+        setupImageClick();
         initializeDependencies();
 
         handleIntentData();
@@ -128,6 +130,14 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         recyclerView.setAdapter(flowerListAdapter);
     }
 
+    private void openImageFullscreen() {
+        if (currentFlower != null) {
+            Intent intent = new Intent(this, FullScreenImageActivity.class);
+            intent.putExtra("imageUrl", currentFlower.getImageUrl());
+            startActivity(intent);
+        }
+    }
+
     private void setupBottomAppBar() {
         bottomAppBar = findViewById(R.id.bottom_navigation);
 
@@ -141,6 +151,14 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
                 return true;
             } else {
                 return false;
+            }
+        });
+    }
+    private void setupImageClick(){
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageFullscreen();
             }
         });
     }

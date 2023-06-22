@@ -28,4 +28,5 @@
     <string name="see_all">See All</string>
     <string name="my_saved_flowers">My saved flowers</string>
     <string name="logo">Flower App Logo\n</string>
+    <string name="image">Image</string>
 </resources>
