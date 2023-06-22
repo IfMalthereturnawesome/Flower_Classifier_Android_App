@@ -215,10 +215,15 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         String predictedClass = intent.getStringExtra("predictedClass");
         String imageUriString = intent.getStringExtra("imageUri");
         String flowerDocumentId = getIntent().getStringExtra("documentId");
+        float confidence = intent.getFloatExtra("confidence", 0.0f);
 
         if (predictedClass != null && imageUriString != null) {
             displayClassificationResult(predictedClass, imageUriString);
             fetchFlowerDetails(flowerDocumentId);
+            String confidenceText = String.format(Locale.getDefault(), "Confidence: %.2f%%", confidence * 100);
+            Toast toast = Toast.makeText(this, confidenceText, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, -300);
+                   toast.show();
         } else if (flowerDocumentId != null) {
             fetchFlowerDetails(flowerDocumentId);
         }

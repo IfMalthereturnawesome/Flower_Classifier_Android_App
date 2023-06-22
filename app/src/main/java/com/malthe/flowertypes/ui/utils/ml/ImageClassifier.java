@@ -16,6 +16,8 @@ import java.nio.ByteOrder;
 public class ImageClassifier {
     private Model model;
     private int modelImageSize = 224;
+    private static final float CONFIDENCE_THRESHOLD = 0.7f;
+    private float classificationConfidence;
 
     public ImageClassifier(Context context) {
         try {
@@ -64,12 +66,17 @@ public class ImageClassifier {
         int maxPos = 0;
         float maxConfidence = 0;
         for (int i = 0; i < confidences.length; i++) {
-            if (confidences[i] > maxConfidence) {
+            if (confidences[i] > maxConfidence && confidences[i] >= CONFIDENCE_THRESHOLD) {
                 maxConfidence = confidences[i];
                 maxPos = i;
             }
         }
 
+        if (maxConfidence < CONFIDENCE_THRESHOLD) {
+            classificationConfidence = 0;
+            return null; // Return null if confidence is below the threshold
+        }
+        classificationConfidence = maxConfidence;
         String[] classes = {"Lilly", "Lotus", "Orchid", "Sunflower", "Tulip"};
         return classes[maxPos];
     }
@@ -78,6 +85,10 @@ public class ImageClassifier {
         if (model != null) {
             model.close();
         }
+    }
+
+    public float getClassificationConfidence() {
+        return classificationConfidence;
     }
 }
 

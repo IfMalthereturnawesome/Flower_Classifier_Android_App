@@ -71,6 +71,7 @@ public class ImageUtils {
     }
 
 
+
     public static void uploadImageToFirebaseStorage(AppCompatActivity activity, String predictedClass, Bitmap bitmap) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();

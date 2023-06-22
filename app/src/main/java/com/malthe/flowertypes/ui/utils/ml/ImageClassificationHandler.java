@@ -11,13 +11,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
+import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.activity.DetailActivity;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ImageUtils;
-
-import com.google.firebase.Timestamp;
+import com.malthe.flowertypes.ui.utils.SnackbarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +80,7 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
     private void classifyImage(Bitmap image, Uri imageUri) {
         activity.runOnUiThread(() -> progressIndicator.setVisibility(View.VISIBLE));
         String predictedClass = imageClassifier.classifyImage(image);
+        float confidence = imageClassifier.getClassificationConfidence();
         if (predictedClass != null) {
             Flower flower = new Flower(predictedClass);
             flower.setLatitude(latitude);
@@ -92,6 +95,7 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
                         intent.putExtra("predictedClass", predictedClass);
                         intent.putExtra("imageUri", imageUri != null ? imageUri.toString() : null);
                         intent.putExtra("documentId", documentReference.getId());
+                        intent.putExtra("confidence", confidence);
 
                         ImageUtils.uploadImageToFirebaseStorage(activity, predictedClass, image);
 
@@ -104,7 +108,15 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
                     });
 
         } else {
-            Toast.makeText(activity, "Sorry, I could not classify the image", Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = SnackbarUtils.createSnackbar(
+                    activity.findViewById(android.R.id.content),
+                    "Sorry, I could not classify the image",
+                    "Retry",
+                    v -> openCamera()
+            );
+            snackbar.setAnchorView(activity.findViewById(R.id.bottom_navigation));
+            snackbar.show();
+
             activity.runOnUiThread(() -> progressIndicator.setVisibility(View.GONE));
         }
     }
@@ -115,7 +127,16 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
     }
 
     public void handlePermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ImageUtils.handlePermissionsResult(activity, requestCode, permissions, grantResults, this);
+        ImageUtils.handlePermissionsResult(activity, requestCode, permissions, grantResults, new ImageUtils.PermissionResultListener() {
+            @Override
+            public void onPermissionGranted() {
+                if(requestCode == ImageUtils.REQUEST_CAMERA) {
+                    openCamera();
+                } else if (requestCode == ImageUtils.REQUEST_GALLERY) {
+                    openGallery();
+                }
+            }
+        });
     }
 
     public void openCamera() {
