@@ -203,25 +203,25 @@ public class SeeSnapFlowersActivity extends AppCompatActivity implements ImageUt
 
 
     private void openMyPlantsActivity() {
-        Intent intent = new Intent(SeeSnapFlowersActivity.this, MyPlantsActivity.class);
+        Intent intent = new Intent(this, MyPlantsActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     private void navigateToSnapPlantsActivity() {
-        Intent intent = new Intent(SeeSnapFlowersActivity.this, SnapPlantsActivity.class);
+        Intent intent = new Intent(this, SnapPlantsActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     private void navigateToDetailActivity(Flower flower) {
-        Intent intent = new Intent(SeeSnapFlowersActivity.this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("documentId", flower.getDocumentId());
         startActivity(intent);
     }
 
     private void navigateToMapsActivity() {
-        Intent intent = new Intent(SeeSnapFlowersActivity.this, MapsActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 

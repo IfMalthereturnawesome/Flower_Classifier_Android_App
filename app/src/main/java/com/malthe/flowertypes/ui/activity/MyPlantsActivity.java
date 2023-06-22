@@ -163,8 +163,7 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
         toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(this, AllFlowersActivity.class);
-            startActivity(intent);
+            onBackPressed();
         });
     }
 
@@ -204,26 +203,26 @@ public class MyPlantsActivity extends AppCompatActivity implements FlowerActionH
     }
 
     private void navigateToDetailActivity(Flower flower) {
-        Intent intent = new Intent(MyPlantsActivity.this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("documentId", flower.getDocumentId());
         startActivity(intent);
     }
 
     private void navigateToMapsActivity() {
-        Intent intent = new Intent(MyPlantsActivity.this, MapsActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
     private void navigateToMySnapsHistory() {
-        Intent intent = new Intent(MyPlantsActivity.this, SnapPlantsActivity.class);
+        Intent intent = new Intent(this, SnapPlantsActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     private void navigateToSeeAllMyPlantsActivity() {
-        Intent intent = new Intent(MyPlantsActivity.this, SeeAllMyPlantsActivity.class);
+        Intent intent = new Intent(this, SeeAllMyPlantsActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
 

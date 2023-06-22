@@ -120,13 +120,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void navigateToDetailActivity(Flower flower) {
-        Intent intent = new Intent(MapsActivity.this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("documentId", flower.getDocumentId());
         startActivity(intent);
     }
 
     private void navigateToMyPlantsActivity() {
-        Intent intent = new Intent(MapsActivity.this, MyPlantsActivity.class);
+        Intent intent = new Intent(this, MyPlantsActivity.class);
         startActivity(intent);
     }
 

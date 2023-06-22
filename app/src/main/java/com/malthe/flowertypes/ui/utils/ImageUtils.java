@@ -27,7 +27,7 @@ public class ImageUtils {
 
     public static final int REQUEST_CAMERA = 3;
     public static final int REQUEST_GALLERY = 1;
-    public static final int REQUEST_DETAIL = 2;
+
 
     public interface ImageClassificationListener {
         void onImageClassified(Bitmap imageBitmap, Uri imageUri);

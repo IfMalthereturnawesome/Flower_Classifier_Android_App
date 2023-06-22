@@ -52,16 +52,16 @@ public class FlowerService {
         FirebaseUser currentUser = getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-        Query query = myPlantsCollection
-                .whereEqualTo("userId", userId)
-                .whereEqualTo("favorite", false);
-        query.get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int count = queryDocumentSnapshots.size();
-                    callback.onCountReceived(count);
-                })
-                .addOnFailureListener(callback::onError);
-    } else {
+            Query query = myPlantsCollection
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("favorite", false);
+            query.get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        int count = queryDocumentSnapshots.size();
+                        callback.onCountReceived(count);
+                    })
+                    .addOnFailureListener(callback::onError);
+        } else {
             callback.onError(new Exception("User not logged in"));
         }
     }
@@ -71,16 +71,16 @@ public class FlowerService {
         FirebaseUser currentUser = getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-        Query query = myPlantsCollection
-                .whereEqualTo("userId", userId)
-                .whereEqualTo("favorite", true);
-        query.get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int count = queryDocumentSnapshots.size();
-                    callback.onCountReceived(count);
-                })
-                .addOnFailureListener(callback::onError);
-    } else {
+            Query query = myPlantsCollection
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("favorite", true);
+            query.get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        int count = queryDocumentSnapshots.size();
+                        callback.onCountReceived(count);
+                    })
+                    .addOnFailureListener(callback::onError);
+        } else {
             callback.onError(new Exception("User not logged in"));
         }
     }
@@ -231,7 +231,6 @@ public class FlowerService {
             callback.onError(new Exception("User not signed in"));
         }
     }
-
 
 
     public Task<Void> deletePlant(String documentId) {

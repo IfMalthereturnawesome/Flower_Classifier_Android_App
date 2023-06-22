@@ -41,6 +41,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.malthe.flowertypes.data.model.Flower;
 // Import Date
 import java.util.Date;
+
 import com.malthe.flowertypes.data.service.FlowerService;
 import com.malthe.flowertypes.ui.adapter.FlowerListAdapter;
 import com.malthe.flowertypes.ui.utils.ml.ImageClassificationHandler;
@@ -66,7 +67,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     private BottomAppBar bottomAppBar;
 
     private ImageClassifier imageClassifier;
-    private static final int REQUEST_DETAIL = 2;
+
     private ArrayList<Flower> classifiedFlowers = new ArrayList<>();
     private RecyclerView recyclerView;
 
@@ -165,7 +166,6 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
 
         if (item.getItemId() == R.id.action_logo) {
             Intent intent = new Intent(this, AllFlowersActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             return true;
         }
@@ -179,9 +179,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
         toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(this, AllFlowersActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivity(intent);
+            onBackPressed();
         });
 
     }
@@ -248,7 +246,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     private void openMyPlantsActivity() {
         Intent intent = new Intent(DetailActivity.this, MyPlantsActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     @Override
@@ -266,6 +264,7 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
     public void onImageClassified(Bitmap imageBitmap, Uri imageUri) {
         imageClassificationHandler.handleImageClassification(imageBitmap, imageUri);
     }
+
     private void initializeLocationManager() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -352,7 +351,6 @@ public class DetailActivity extends AppCompatActivity implements ImageUtils.Imag
                     showErrorMessage("Error fetching flower data");
                 });
     }
-
 
 
     @Override

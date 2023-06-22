@@ -188,7 +188,6 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
 
-
     private void initializeDependencies() {
         flowerActionHandler = new FlowerActionHandler();
         flowerService = new FlowerService();
@@ -371,32 +370,32 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
 
     private void navigateToSeeAllMyPlantsActivity() {
-        Intent intent = new Intent(AllFlowersActivity.this, SeeAllMyPlantsActivity.class);
+        Intent intent = new Intent(this, SeeAllMyPlantsActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     private void openMyPlantsActivity() {
-        Intent intent = new Intent(AllFlowersActivity.this, MyPlantsActivity.class);
+        Intent intent = new Intent(this, MyPlantsActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
 
     private void navigateToSeeSnapFlowersActivity() {
-        Intent intent = new Intent(AllFlowersActivity.this, SeeSnapFlowersActivity.class);
+        Intent intent = new Intent(this, SeeSnapFlowersActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     private void navigateToDetailActivity(Flower flower) {
-        Intent intent = new Intent(AllFlowersActivity.this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("documentId", flower.getDocumentId());
         startActivity(intent);
     }
 
     private void navigateToMapsActivity() {
-        Intent intent = new Intent(AllFlowersActivity.this, MapsActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
@@ -528,19 +527,17 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     }
 
 
-
     private void showUndoActionToast(String message, LinearLayout snackbarLayout) {
         Toast toast = Toast.makeText(AllFlowersActivity.this, message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
         toast.show();
     }
 
-
     private void undoAction(String documentId) {
         LinearLayout snackbarLayout = findViewById(R.id.snackbarLayout);
         flowerService.updateFavoriteStatus(documentId)
                 .addOnSuccessListener(aVoid -> {
-                    showUndoActionToast("Flower marked as not favorite", snackbarLayout);
+                    showUndoActionToast("Flower updated", snackbarLayout);
                     loadInitialData();
                 })
                 .addOnFailureListener(e -> {
@@ -551,7 +548,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     @Override
     public void onActionSuccess(String message, String documentId) {
 
-        if (message.contains("Flower deleted")){
+        if (message.contains("Flower deleted")) {
             Toast toast = Toast.makeText(AllFlowersActivity.this, message, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
             toast.show();

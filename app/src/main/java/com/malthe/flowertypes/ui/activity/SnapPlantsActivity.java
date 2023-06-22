@@ -138,8 +138,7 @@ public class SnapPlantsActivity extends AppCompatActivity implements ImageUtils.
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
         toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(this, AllFlowersActivity.class);
-            startActivity(intent);
+            onBackPressed();
         });
 
     }
@@ -210,25 +209,25 @@ public class SnapPlantsActivity extends AppCompatActivity implements ImageUtils.
 
 
     private void openMyPlantsActivity() {
-        Intent intent = new Intent(SnapPlantsActivity.this, MyPlantsActivity.class);
+        Intent intent = new Intent(this, MyPlantsActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     private void navigateToSeeSnapFlowersActivity() {
-        Intent intent = new Intent(SnapPlantsActivity.this, SeeSnapFlowersActivity.class);
+        Intent intent = new Intent(this, SeeSnapFlowersActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     private void navigateToDetailActivity(Flower flower) {
-        Intent intent = new Intent(SnapPlantsActivity.this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("documentId", flower.getDocumentId());
         startActivity(intent);
     }
 
     private void navigateToMapsActivity() {
-        Intent intent = new Intent(SnapPlantsActivity.this, MapsActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
