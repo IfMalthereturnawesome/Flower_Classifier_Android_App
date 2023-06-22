@@ -45,7 +45,7 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
         this.layoutId = layoutId;
     }
 
-    public FlowerListAdapter(Context context, int layoutId,  ActivityOrigin activityOrigin) {
+    public FlowerListAdapter(Context context, int layoutId, ActivityOrigin activityOrigin) {
         this.flowers = new ArrayList<>();
         this.flowerService = new FlowerService();
         this.context = context;
@@ -78,11 +78,11 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
     }
 
 
-
     private void showError(String errorMessage) {
         Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
-        toast.show();    }
+        toast.show();
+    }
 
     @NonNull
     @Override
@@ -133,8 +133,6 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
     }
 
 
-
-
     @Override
     public int getItemCount() {
         return flowers.size();
@@ -146,7 +144,9 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
 
     public interface OnItemClickListener {
         void onItemClick(Flower flower);
+
         void onDeleteClick(String documentId);
+
         void onUpdateClick(String documentId);
     }
 
@@ -189,6 +189,7 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
                 listener.onDeleteClick(clickedFlower.getDocumentId());
             }
         }
+
         private void handleItemClick(OnItemClickListener listener) {
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
@@ -229,8 +230,6 @@ public class FlowerListAdapter extends RecyclerView.Adapter<FlowerListAdapter.Fl
                 flowerImageView.setVisibility(View.GONE);
             }
         }
-
-
 
 
     }

@@ -93,7 +93,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     private final ActivityOrigin seeSnapFlowers = ActivityOrigin.SEE_SNAP_FLOWERS;
     private final ActivityOrigin seeAllMyFlowers = ActivityOrigin.SEE_ALL_MY_PLANTS;
     LinearProgressIndicator progressIndicator;
-
+    private boolean isUserSignedIn = false;
 
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
@@ -117,44 +117,51 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         setupViews();
         loadInitialData();
 
-
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            // User is signed in, update your UI here
-            loadInitialData();
-        } else {
-            // User is not signed in, you might want to show sign-in UI here
-            List<AuthUI.IdpConfig> providers = Arrays.asList(
-                    new AuthUI.IdpConfig.GoogleBuilder().build(),
-                    new AuthUI.IdpConfig.EmailBuilder().build()
-            );
+        checkUserSignedIn();
 
-            Intent signInIntent = AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .build();
-
-            signInLauncher.launch(signInIntent);
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-
-        flowerListAdapterNotYetSaved.loadFlowers(notMyPlants);
-        flowerListAdapterSaved.loadFlowers(myPlants);
-        getSizeOfFlowers();
-        getSizeOfFavoriteFlowers();
+        if (isUserSignedIn) {
+            loadInitialData();
+        }
         setupPlaceholder();
+    }
+
+    private void checkUserSignedIn() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            // User is signed in
+            isUserSignedIn = true;
+            loadInitialData();
+        } else {
+            // User is not signed in
+            isUserSignedIn = false;
+            showSignInUI();
+        }
+    }
+
+    private void showSignInUI() {
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                new AuthUI.IdpConfig.EmailBuilder().build()
+        );
+
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build();
+
+        signInLauncher.launch(signInIntent);
     }
 
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
@@ -165,7 +172,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
             if (user != null) {
                 // User is signed in, call onActionSuccess
                 onActionSuccess("Successfully signed in", null);
-                loadInitialData();
+
             } else {
                 // User is null, sign-in failed, call onActionFailure
                 onActionFailure("Sign-in failed");
@@ -534,10 +541,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         flowerService.updateFavoriteStatus(documentId)
                 .addOnSuccessListener(aVoid -> {
                     showUndoActionToast("Flower marked as not favorite", snackbarLayout);
-                    flowerListAdapterNotYetSaved.loadFlowers(notMyPlants);
-                    flowerListAdapterSaved.loadFlowers(myPlants);
-                    getSizeOfFlowers();
-                    getSizeOfFavoriteFlowers();
+                    loadInitialData();
                 })
                 .addOnFailureListener(e -> {
                     showUndoActionToast("Error marking plant as not favorite", snackbarLayout);
@@ -560,10 +564,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
                     v -> undoAction(documentId)
             ).setAnchorView(R.id.action_camera).show();
         }
-        flowerListAdapterNotYetSaved.loadFlowers(notMyPlants);
-        flowerListAdapterSaved.loadFlowers(myPlants);
-        getSizeOfFlowers();
-        getSizeOfFavoriteFlowers();
+        loadInitialData();
 
 
     }
