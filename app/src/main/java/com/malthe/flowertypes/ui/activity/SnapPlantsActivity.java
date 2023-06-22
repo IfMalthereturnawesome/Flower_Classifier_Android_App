@@ -263,7 +263,7 @@ public class SnapPlantsActivity extends AppCompatActivity implements ImageUtils.
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permissions granted, initialize location manager
                 initializeLocationManager();
-                ImageUtils.handlePermissionsResult(this, requestCode, permissions, grantResults, () -> ImageUtils.openCamera(SnapPlantsActivity.this));
+                imageClassificationHandler.handlePermissionsResult(requestCode, permissions, grantResults);
             } else {
                 // Permissions denied, handle accordingly
                 Toast.makeText(this, "Location permission denied.", Toast.LENGTH_SHORT).show();

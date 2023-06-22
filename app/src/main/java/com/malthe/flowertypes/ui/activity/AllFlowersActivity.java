@@ -60,19 +60,17 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
 
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-
-    private FlowerListAdapter flowerListAdapter;
-
     private RecyclerView recyclerViewNotYetSaved;
     private RecyclerView recyclerViewSaved;
     private FlowerListAdapter flowerListAdapterNotYetSaved;
     private FlowerListAdapter flowerListAdapterSaved;
     private FlowerService flowerService;
     private ImageClassifier imageClassifier;
+    private FlowerListAdapter flowerListAdapter;
     private LinearLayout placeholderLayout;
     private FlowerActionHandler flowerActionHandler;
-    private final FlowerFilter notMyPlants = FlowerFilter.NOT_MY_PLANTS;
 
+    private final FlowerFilter notMyPlants = FlowerFilter.NOT_MY_PLANTS;
     private final FlowerFilter myPlants = FlowerFilter.MY_PLANTS;
     private ImageClassificationHandler imageClassificationHandler;
     private LocationManager locationManager;
@@ -246,7 +244,6 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
         if (item.getItemId() == R.id.action_logo) {
             Intent intent = new Intent(this, AllFlowersActivity.class);
 
@@ -256,8 +253,6 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
             AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener(task -> {
-
-                        // Sign-out completed, handle UI updates or navigate to sign-in screen
                         Intent intent = new Intent(this, LauncherActivity.class);
                         startActivity(intent);
                         finish();
@@ -297,9 +292,6 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
     private void setupBottomAppBar() {
         BottomAppBar bottomAppBar = findViewById(R.id.bottom_navigation);
-        bottomAppBar.setNavigationOnClickListener(view -> {
-            // Handle navigation icon press
-        });
 
         bottomAppBar.setOnMenuItemClickListener(menuItem -> {
             int id = menuItem.getItemId();
@@ -472,7 +464,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permissions granted, initialize location manager
                 initializeLocationManager();
-                ImageUtils.handlePermissionsResult(this, requestCode, permissions, grantResults, () -> ImageUtils.openCamera(AllFlowersActivity.this));
+                imageClassificationHandler.handlePermissionsResult(requestCode, permissions, grantResults);
             } else {
                 // Permissions denied, handle accordingly
                 onActionFailure("Location permission denied");

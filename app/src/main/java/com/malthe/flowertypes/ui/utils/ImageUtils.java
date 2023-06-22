@@ -37,13 +37,15 @@ public class ImageUtils {
         void onPermissionGranted();
     }
 
-    public static void openCamera(AppCompatActivity activity) {
+    public static void openCamera(AppCompatActivity activity, PermissionResultListener listener) {
         if (activity.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             activity.startActivityForResult(cameraIntent, REQUEST_CAMERA);
         } else {
-            Toast.makeText(activity, "Camera permissions are not granted, requesting permissions now...", Toast.LENGTH_SHORT).show();
             activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
+            if (listener != null) {
+                listener.onPermissionGranted();
+            }
         }
     }
 
@@ -55,6 +57,19 @@ public class ImageUtils {
             Toast.makeText(activity, "No suitable apps found to open the gallery.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public static void handlePermissionsResult(AppCompatActivity activity, int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults, PermissionResultListener listener) {
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (listener != null) {
+                    listener.onPermissionGranted();
+                }
+            } else {
+                Toast.makeText(activity, "Camera permission is required to take pictures", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     public static void uploadImageToFirebaseStorage(AppCompatActivity activity, String predictedClass, Bitmap bitmap) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -119,15 +134,5 @@ public class ImageUtils {
         }
     }
 
-    public static void handlePermissionsResult(AppCompatActivity activity, int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults, PermissionResultListener listener) {
-        if (requestCode == 100) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (listener != null) {
-                    listener.onPermissionGranted();
-                }
-            } else {
-                Toast.makeText(activity, "Camera permission is required to take pictures", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+
 }

@@ -24,7 +24,7 @@ import com.malthe.flowertypes.data.service.FlowerService;
 
 import java.util.List;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private FlowerService flowerService;
     private GoogleMap googleMap;
@@ -50,7 +50,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
         if (item.getItemId() == R.id.action_logo) {
             Intent intent = new Intent(this, AllFlowersActivity.class);
             startActivity(intent);
@@ -59,7 +58,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupLogoIcon(){
+    private void setupLogoIcon() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -108,6 +107,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
     }
+
     @Override
     public boolean onMarkerClick(Marker marker) {
         // Retrieve the flower object associated with the clicked marker
@@ -190,7 +190,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(view -> navigateToMyPlantsActivity());
     }
-
 
 
 }

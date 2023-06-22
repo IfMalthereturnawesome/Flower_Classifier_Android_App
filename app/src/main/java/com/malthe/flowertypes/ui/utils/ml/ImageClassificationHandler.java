@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +22,7 @@ import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageClassificationHandler implements ImageUtils.ImageClassificationListener {
+public class ImageClassificationHandler implements ImageUtils.ImageClassificationListener, ImageUtils.PermissionResultListener {
     private AppCompatActivity activity;
 
     private double latitude;
@@ -108,8 +109,17 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
         }
     }
 
+    @Override
+    public void onPermissionGranted() {
+        openCamera();
+    }
+
+    public void handlePermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        ImageUtils.handlePermissionsResult(activity, requestCode, permissions, grantResults, this);
+    }
+
     public void openCamera() {
-        ImageUtils.openCamera(activity);
+        ImageUtils.openCamera(activity, this);
     }
 
     public void openGallery() {
