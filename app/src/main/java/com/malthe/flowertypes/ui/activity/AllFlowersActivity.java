@@ -539,7 +539,7 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
     @Override
     public void onActionSuccess(String message, String documentId) {
 
-        if (message.contains("Flower deleted")) {
+        if (message.contains("Flower deleted") || message.contains("Successfully signed in")){
             Toast toast = Toast.makeText(AllFlowersActivity.this, message, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
             toast.show();

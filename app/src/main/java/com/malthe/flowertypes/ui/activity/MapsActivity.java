@@ -162,7 +162,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        // Create a LatLngBounds.Builder to calculate the bounds
+
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         for (Flower flower : flowers) {
@@ -171,17 +171,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             LatLng flowerLocation = new LatLng(latitude, longitude);
 
-            // Include each flower location in the bounds
+
             builder.include(flowerLocation);
         }
 
-        // Build the LatLngBounds
+
         LatLngBounds bounds = builder.build();
 
-        // Calculate padding to ensure all markers are visible with a margin
+
         int padding = 100;
 
-        // Move the camera to the bounds and apply padding
+
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         googleMap.moveCamera(cameraUpdate);
     }
