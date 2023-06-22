@@ -302,9 +302,6 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
 
                 imageClassificationHandler.openGallery();
                 return true;
-            } else if (id == R.id.action_camera) {
-                imageClassificationHandler.openCamera();
-                return true;
             }
             return false;
         });
