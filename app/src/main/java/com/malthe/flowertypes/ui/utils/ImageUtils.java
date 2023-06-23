@@ -117,7 +117,7 @@ public class ImageUtils {
                     imageBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    imageBitmap = null; // Set the Bitmap to null if an error occurs
+                    imageBitmap = null;
                 }
             } else {
                 return;

@@ -174,7 +174,8 @@ public class AllFlowersActivity extends AppCompatActivity implements ImageUtils.
         } else {
             // Sign-in failed, call onActionFailure
             if (response != null) {
-                onActionFailure("Sign-in error: " + Objects.requireNonNull(response.getError()).getLocalizedMessage());
+                onActionFailure("Sign-in error: " + Objects.requireNonNull(
+                        response.getError()).getLocalizedMessage());
             } else {
                 onActionFailure("Sign-in failed");
             }
