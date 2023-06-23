@@ -72,39 +72,6 @@ public class ImageUtils {
 
 
 
-    public static void uploadImageToFirebaseStorage(AppCompatActivity activity, String predictedClass, Bitmap bitmap) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        StorageReference flowerImagesRef = storageRef.child("flower_images/" + predictedClass + ".jpg");
-
-        UploadTask uploadTask = flowerImagesRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.e("TAG", "Upload failed", exception);
-                Toast.makeText(activity, "Image upload failed!", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                flowerImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        DocumentReference flowerRef = FirebaseFirestore.getInstance()
-                                .collection("flowers")
-                                .document(predictedClass);
-                        flowerRef.update("imageUrl", uri.toString());
-                    }
-                });
-            }
-        });
-    }
-
     public static void handleActivityResult(AppCompatActivity activity, int requestCode, int resultCode, @Nullable Intent data, ImageClassificationListener listener) {
         if (resultCode == AppCompatActivity.RESULT_OK && data != null) {
             Bitmap imageBitmap;
