@@ -108,9 +108,9 @@ public class FlowerService {
                         // Get the data of the document
                         Map<String, Object> flowerData = document.getData();
                         if (flowerData != null) {
-                            // Add the userId field
+
                             flowerData.put("userId", userId);
-                            // Add other fields
+
                             flowerData.put("flowerName", flower.getFlowerName());
                             flowerData.put("favorite", false);
                             flowerData.put("longitude", flower.getLongitude());
@@ -139,7 +139,7 @@ public class FlowerService {
                 }
             });
         } else {
-            // User is not signed in, handle the error or show appropriate UI
+
             return Tasks.forException(new Exception("User not signed in"));
         }
     }
@@ -178,7 +178,7 @@ public class FlowerService {
 
             if (snapshot.exists()) {
                 boolean currentFavoriteStatus = Boolean.TRUE.equals(snapshot.getBoolean("favorite"));
-                boolean newFavoriteStatus = !currentFavoriteStatus; // Invert the value
+                boolean newFavoriteStatus = !currentFavoriteStatus;
 
                 return flowerRef.update("favorite", newFavoriteStatus);
             }
@@ -190,7 +190,7 @@ public class FlowerService {
 
     public Task<Void> updateFlowerToFavorite(String flowerDocumentId) {
         DocumentReference flowerRef = myPlantsCollection.document(flowerDocumentId);
-        // Updating the favorite field to true
+
         return flowerRef.update("favorite", true);
     }
 
@@ -225,7 +225,7 @@ public class FlowerService {
                         }
                     });
         } else {
-            // User is not signed in, handle the error or show appropriate UI
+
             callback.onError(new Exception("User not signed in"));
         }
     }
@@ -255,7 +255,7 @@ public class FlowerService {
                         }
                     });
         } else {
-            // User is not signed in, handle the error or show appropriate UI
+
             callback.onError(new Exception("User not signed in"));
         }
     }
@@ -264,7 +264,7 @@ public class FlowerService {
     public Task<Void> deletePlant(String documentId) {
         DocumentReference plantRef = myPlantsCollection.document(documentId);
 
-        // Delete the document from the "MyPlants" collection
+
         return plantRef.delete();
     }
 
