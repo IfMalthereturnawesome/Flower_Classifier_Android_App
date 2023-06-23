@@ -3,6 +3,7 @@ package com.malthe.flowertypes.ui.utils.ml;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.malthe.flowertypes.R;
 import com.malthe.flowertypes.data.model.Flower;
 import com.malthe.flowertypes.data.service.FlowerService;
@@ -91,16 +94,28 @@ public class ImageClassificationHandler implements ImageUtils.ImageClassificatio
                     .addOnSuccessListener(documentReference -> {
                         flower.setDocumentId(documentReference.getId());
 
-                        Intent intent = new Intent(activity, DetailActivity.class);
-                        intent.putExtra("predictedClass", predictedClass);
-                        intent.putExtra("imageUri", imageUri != null ? imageUri.toString() : null);
-                        intent.putExtra("documentId", documentReference.getId());
-                        intent.putExtra("confidence", confidence);
+                        flowerService.uploadImageToFirebaseStorage(predictedClass, image,
+                                uri -> {
+                                    DocumentReference flowerRef = FirebaseFirestore.getInstance()
+                                            .collection("flowers")
+                                            .document(predictedClass);
+                                    flowerRef.update("imageUrl", uri.toString());
 
-                        ImageUtils.uploadImageToFirebaseStorage(activity, predictedClass, image);
+                                    Intent intent = new Intent(activity, DetailActivity.class);
+                                    intent.putExtra("predictedClass", predictedClass);
+                                    intent.putExtra("imageUri", imageUri != null ? imageUri.toString() : null);
+                                    intent.putExtra("documentId", documentReference.getId());
+                                    intent.putExtra("confidence", confidence);
 
-                        activity.startActivity(intent);
-                        activity.runOnUiThread(() -> progressIndicator.setVisibility(View.GONE));
+                                    activity.startActivity(intent);
+                                    activity.runOnUiThread(() -> progressIndicator.setVisibility(View.GONE));
+                                },
+                                e -> {
+                                    Log.e("TAG", "Upload failed", e);
+                                    Toast.makeText(activity, "Image upload failed!", Toast.LENGTH_SHORT).show();
+                                    activity.runOnUiThread(() -> progressIndicator.setVisibility(View.GONE));
+                                }
+                        );
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(activity, "Error adding flower to Firestore", Toast.LENGTH_SHORT).show();

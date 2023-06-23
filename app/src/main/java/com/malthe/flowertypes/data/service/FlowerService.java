@@ -1,5 +1,9 @@
 package com.malthe.flowertypes.data.service;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -10,9 +14,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.malthe.flowertypes.data.model.Flower;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +142,26 @@ public class FlowerService {
             // User is not signed in, handle the error or show appropriate UI
             return Tasks.forException(new Exception("User not signed in"));
         }
+    }
+
+    public void uploadImageToFirebaseStorage(String predictedClass, Bitmap bitmap, OnSuccessListener<Uri> onSuccess, OnFailureListener onFailure) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        StorageReference flowerImagesRef = storageRef.child("flower_images/" + predictedClass + ".jpg");
+
+        UploadTask uploadTask = flowerImagesRef.putBytes(data);
+        uploadTask.addOnFailureListener(onFailure)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        flowerImagesRef.getDownloadUrl().addOnSuccessListener(onSuccess);
+                    }
+                });
     }
 
 
